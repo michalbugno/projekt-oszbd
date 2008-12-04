@@ -37,12 +37,12 @@ Głównym zadaniem projektu jest dogłębne poznanie struktury
 danych typu GIS (geographical information system), jak również analiza oraz
 wykorzystanie tego typu danych w wizualizacji danych meteorologicznych. System
 docelowo ma za zadanie przedstawienie sytuacji meteorologicznej na podstawie
-danych zbieranych na bieżąco jak również danych historycznych zebranych
+danych zbieranych na bieżąco jak również danych historycznych zgromadzonych
 poprzednio. System ma również mieć możliwość udostępniania danych/wizualizacji
 historycznych na życzenie użytkownika. Do celów badania wydajności systemu
 wykorzystywane będą dane z przynajmniej dwóch źródeł informacji
 meteorologicznej, podczas gdy system ma domyślnie obsługiwać 4-5 stacji
-narciarskich.
+narciarskich (po kilka punktów na każdą stację).
 
 \section{Ogólna struktura systemu}
 
@@ -100,7 +100,7 @@ się pracować na dostępnych za darmo silnikach typu Oracle Express (XE)
   \item Dane GPS (no bo w sumie czemu nie, zawsze fajnie takie cos wyświetlić)
   \item Kraj
   \item Np. ilość stoków w danym ośrodku, na danej wysokości etc.
-  \item Dane GIS - jakis klucz do osobnej tabeli , w której bedzie:
+  \item Dane GIS - klucz obcy tabeli z danymi typu GIS.
   \end{itemize}
 \subsection{Dane GIS}
 Struktura tej części danych będzie silnie uzależniona od dostępnych danych na temat (dla każdego punktu):
@@ -112,7 +112,7 @@ Struktura tej części danych będzie silnie uzależniona od dostępnych danych 
 \subsection{Dane pomiarów}
 \begin{itemize}
   \item numer pomiaru (klucz główny)
-  \item nazwa punktu pomiarowego lub klucz obcy do danych informacyjncyh
+  \item nazwa punktu pomiarowego lub klucz obcy do danych informacyjnych
   \item godzina
   \item data
 \end{itemize}
@@ -136,12 +136,12 @@ jest część \emph{Extract}:
 \begin{itemize}
 \item uruchamiamy skrypt z parametrem adresu strony (w zasadzie chodzi o wybrany szczyt)
 \item skrypt analizuje stronę za pomocą parsera HTML+XML Nokogiri
-\item dane zapisywanę są w prostej postaci w tablicy
+\item dane zapisywane są w prostej postaci w tablicy
 \item skrypt znajduje link do danych z poprzedniego okresu, odwiedza go i powtarza proces
 \end{itemize}
 
 Dane są zapisywane w tej chwili w bardzo prostym formacie, część \emph{Transform} będzie odpowiedzialna
-za konwersji ich do formatu odpowiedniego dla bazy danych
+za ich konwersję do formatu odpowiedniego dla bazy danych
 
 \section{Źródła}
 Wszelkie źródła dostępne są do pobrania przez repozytorium Git pod adresem
