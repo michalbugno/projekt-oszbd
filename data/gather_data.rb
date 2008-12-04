@@ -1,5 +1,6 @@
 # EXTRACT - TRANSFORM - LOAD
 require "rubygems"
+require "date"
 require "ruby-debug"
 require "nokogiri"
 require 'net/http'
