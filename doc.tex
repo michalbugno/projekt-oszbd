@@ -74,8 +74,7 @@ wizualizację osiągniętych wyników analizy.
 Aplikacja utworzona będzie jako aplikacja sieciowa dostępna z poziomu
 przeglądarki internetowej.
 
-\section{Architektura systemu}
-
+\subsection{Architektura systemu}
 Do implementacji systemu posłużymy się:
 \begin{itemize}
 \item językami skryptowymi - Ruby (do implementacji crawlera, części aplikacji
@@ -106,31 +105,32 @@ się pracować na dostępnych za darmo silnikach typu Oracle Express (XE)
 \subsection{Dane GIS}
 Struktura tej części danych będzie silnie uzależniona od dostępnych danych na temat (dla każdego punktu):
 \begin{itemize}
-  \item Wysokosci
-  \item Obszaru pokrywanego pomiarami.
-  \item Wspolrzednych punktu pomairowego
+  \item wysokości
+  \item obszaru pokrywanego pomiarami
+  \item współrzędnych punktu pomiarowego
 \end{itemize}
 \subsection{Dane pomiarów}
 \begin{itemize}
-  \item Numer Pomiaru (klucz główny)
-  \item Nazwa Punktu Pomiarowego lub klucz obcy do Danych Informacyjncyh
+  \item numer pomiaru (klucz główny)
+  \item nazwa punktu pomiarowego lub klucz obcy do danych informacyjncyh
   \item godzina
   \item data
 \end{itemize}
-\subsection{Dane wartośći pomiarów}
+\subsection{Dane wartości pomiarów}
   \begin{itemize}
-  \item Numer pomiaru
-  \item Temperatura max
-  \item Temperatura min
-  \item Wiatr- kierunek
-  \item Wiatr- siła
-  \item Zachmurzenie
-  \item Opady sniegu
-  \item Opady deszczu
+  \item numer pomiaru
+  \item temperatura max
+  \item temperatura min
+  \item wiatr -- kierunek
+  \item wiatr -- siła
+  \item zachmurzenie
+  \item opady śniegu
+  \item opady deszczu
 \end{itemize}
 
 \section{Crawler}
-Crawler jest napisany w języku Ruby i służy do pobierania danych ze strony \url{http://www.snow-forecast.com}.
+Crawler jest napisany w języku Ruby i służy do pobierania danych ze strony
+\\\url{http://www.snow-forecast.com}.
 Docelowo będzie to prosty skrypt oparty o metodologię \emph{Extract--Transform--Load}. W tej chwili zaimplementowana
 jest część \emph{Extract}:
 \begin{itemize}
@@ -142,5 +142,10 @@ jest część \emph{Extract}:
 
 Dane są zapisywane w tej chwili w bardzo prostym formacie, część \emph{Transform} będzie odpowiedzialna
 za konwersji ich do formatu odpowiedniego dla bazy danych
+
+\section{Źródła}
+Wszelkie źródła dostępne są do pobrania przez repozytorium Git pod adresem
+\\
+\url{http://github.com/michalbugno/projekt-oszdb/}
 
 \end{document}
