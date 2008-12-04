@@ -72,7 +72,8 @@ wizualizację osiągniętych wyników analizy.
 Aplikacja utworzona będzie jako aplikacja sieciowa dostępna z poziomu
 przeglądarki internetowej.
 
-\section{Data Flow Diagram}
+\section{Architektura}
+\subsection{Data Flow Diagram}
 Poniższy diagram przepływu danych prezentuje koncepcję naszego projektu. Centralną
 częścią jest aplikacja webowa, która umożliwia interakcję z użytkownikiem a także
 pobiera i analizuje dane z bazy danych. Crawler zbiera dane ze stron internetowych
@@ -80,7 +81,7 @@ a następnia przetwarza je i wrzuca do BD.
 
 \includegraphics[width=35em]{images/data_flow_diagram.pdf}
 
-\section{Entity Relationship Diagram}
+\subsection{Entity Relationship Diagram}
 Do momentu ustabilizowania bazy danych Oracle na serwerze AGH będziemy starali
 się pracować na dostępnych za darmo silnikach typu Oracle Express (XE)
   postawionych na lokalnych maszynach, z uwzględnieniem możliwości
@@ -89,7 +90,7 @@ się pracować na dostępnych za darmo silnikach typu Oracle Express (XE)
 
 \includegraphics[width=35em]{images/erd_diagram.pdf}
 
-\section{Crawler}
+\subsection{Crawler}
 Crawler jest napisany w języku Ruby i służy do pobierania danych ze strony
 \\\url{http://www.snow-forecast.com}.
 Docelowo będzie to prosty skrypt oparty o metodologię \emph{Extract--Transform--Load}. W tej chwili zaimplementowana
