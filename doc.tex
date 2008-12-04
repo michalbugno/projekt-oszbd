@@ -72,59 +72,22 @@ wizualizację osiągniętych wyników analizy.
 Aplikacja utworzona będzie jako aplikacja sieciowa dostępna z poziomu
 przeglądarki internetowej.
 
-\subsection{Architektura systemu}
-Do implementacji systemu posłużymy się:
-\begin{itemize}
-\item językami skryptowymi - Ruby (do implementacji crawlera, części aplikacji
-    webowej oraz renderera) i Python (do sprawnej komunikacji z API Google
-      Maps)
-\item frameworkiem aplikacji web -- Merb
-\end{itemize}
+\section{Data Flow Diagram}
+Poniższy diagram przepływu danych prezentuje koncepcję naszego projektu. Centralną
+częścią jest aplikacja webowa, która umożliwia interakcję z użytkownikiem a także
+pobiera i analizuje dane z bazy danych. Crawler zbiera dane ze stron internetowych
+a następnia przetwarza je i wrzuca do BD.
 
-
-\section{Przepływ danych w systemie}
 \includegraphics[width=35em]{images/data_flow_diagram.pdf}
 
-\section{Baza danych}
+\section{Entity Relationship Diagram}
 Do momentu ustabilizowania bazy danych Oracle na serwerze AGH będziemy starali
 się pracować na dostępnych za darmo silnikach typu Oracle Express (XE)
   postawionych na lokalnych maszynach, z uwzględnieniem możliwości
-  przystosowania na nich aplikacji sprawnej w pełnej wersji Oracle. Wstępnie w
-  bazie danych planujemy istnienie następujących danych:
-\subsection{Dane informacyjne dla punktow pomiarowych.}
-\begin{itemize}
-  \item Nazwa Ośrodka
-  \item Adres
-  \item Dane GPS (no bo w sumie czemu nie, zawsze fajnie takie cos wyświetlić)
-  \item Kraj
-  \item Np. ilość stoków w danym ośrodku, na danej wysokości etc.
-  \item Dane GIS - klucz obcy tabeli z danymi typu GIS.
-  \end{itemize}
-\subsection{Dane GIS}
-Struktura tej części danych będzie silnie uzależniona od dostępnych danych na temat (dla każdego punktu):
-\begin{itemize}
-  \item wysokości
-  \item obszaru pokrywanego pomiarami
-  \item współrzędnych punktu pomiarowego
-\end{itemize}
-\subsection{Dane pomiarów}
-\begin{itemize}
-  \item numer pomiaru (klucz główny)
-  \item nazwa punktu pomiarowego lub klucz obcy do danych informacyjnych
-  \item godzina
-  \item data
-\end{itemize}
-\subsection{Dane wartości pomiarów}
-  \begin{itemize}
-  \item numer pomiaru
-  \item temperatura max
-  \item temperatura min
-  \item wiatr -- kierunek
-  \item wiatr -- siła
-  \item zachmurzenie
-  \item opady śniegu
-  \item opady deszczu
-\end{itemize}
+  przystosowania na nich aplikacji sprawnej w pełnej wersji Oracle. Wstępnie
+  przewidujemy taki model istotnych danych:
+
+\includegraphics[width=35em]{images/erd_diagram.pdf}
 
 \section{Crawler}
 Crawler jest napisany w języku Ruby i służy do pobierania danych ze strony
