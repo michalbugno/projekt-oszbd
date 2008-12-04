@@ -4,3 +4,4 @@ doc.out
 doc.pdf
 doc.toc
 *.swp
+.DS_Store
