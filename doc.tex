@@ -93,7 +93,41 @@ Do momentu ustabilizowania bazy danych Oracle na serwerze AGH będziemy starali
 się pracować na dostępnych za darmo silnikach typu Oracle Express (XE)
   postawionych na lokalnych maszynach, z uwzględnieniem możliwości
   przystosowania na nich aplikacji sprawnej w pełnej wersji Oracle. Wstępnie w
-  bazie danych planujemy istnienie następujących tabel oraz relacji:
+  bazie danych planujemy istnienie następujących danych:
+\subsection{Dane informacyjne dla punktow pomiarowych.}
+\begin{itemize}
+  \item Nazwa Ośrodka
+  \item Adres
+  \item Dane GPS (no bo w sumie czemu nie, zawsze fajnie takie cos wyświetlić)
+  \item Kraj
+  \item Np. ilość stoków w danym ośrodku, na danej wysokości etc.
+  \item Dane GIS - jakis klucz do osobnej tabeli , w której bedzie:
+  \end{itemize}
+\subsection{Dane GIS}
+Struktura tej części danych będzie silnie uzależniona od dostępnych danych na temat (dla każdego punktu):
+\begin{itemize}
+  \item Wysokosci
+  \item Obszaru pokrywanego pomiarami.
+  \item Wspolrzednych punktu pomairowego
+\end{itemize}
+\subsection{Dane pomiarów}
+\begin{itemize}
+  \item Numer Pomiaru (klucz główny)
+  \item Nazwa Punktu Pomiarowego lub klucz obcy do Danych Informacyjncyh
+  \item godzina
+  \item data
+\end{itemize}
+\subsection{Dane wartośći pomiarów}
+  \begin{itemize}
+  \item Numer pomiaru
+  \item Temperatura max
+  \item Temperatura min
+  \item Wiatr- kierunek
+  \item Wiatr- siła
+  \item Zachmurzenie
+  \item Opady sniegu
+  \item Opady deszczu
+\end{itemize}
 
 \section{Crawler}
 Crawler jest napisany w języku Ruby i służy do pobierania danych ze strony \url{http://www.snow-forecast.com}.
@@ -107,6 +141,6 @@ jest część \emph{Extract}:
 \end{itemize}
 
 Dane są zapisywane w tej chwili w bardzo prostym formacie, część \emph{Transform} będzie odpowiedzialna
-za przekonwertowanie ich do formatu odpowiedniego dla bazy danych
+za konwersji ich do formatu odpowiedniego dla bazy danych
 
 \end{document}
