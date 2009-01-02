@@ -5,3 +5,4 @@ doc.pdf
 doc.toc
 *.swp
 .DS_Store
+weather/config/database.yml
