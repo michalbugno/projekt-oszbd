@@ -18,7 +18,6 @@ Biberwier
 Bizau
 Bodental
 Brand
-BrixenimThale
 Dachstein-Glacier
 Dalaas
 Damuls
@@ -95,7 +94,6 @@ Kaprun
 KarneralmSchonfeld
 Katschberg-Aineck
 Kaunertal
-Kelchsau
 KindbergPolzlLifte
 Kirchberg
 Kirchdorf
@@ -110,7 +108,6 @@ Krimml
 KristbergSilbertal
 Kuhtai
 Lachtal
-Lackenhofotscher
 LandeckZamsFliess
 Langenwang
 LaternserTal
@@ -176,7 +173,6 @@ Serfaus
 Sillian
 Solden
 Soll
-SpitalamPyhrn
 St-Anton
 St-Chrisptoph
 StGallenkirch
@@ -189,7 +185,6 @@ SteegimLechtal
 Sternstein
 Stoderzinken
 Stubai-Glacier
-Stuhleck
 Tauplitz
 TelfesinStubai
 Thierbach

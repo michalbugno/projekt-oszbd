@@ -10,7 +10,11 @@ class Sequel::Base < Sequel::Model
   end
 
   def self.create_table!
-    DB.execute("DROP SEQUENCE #{self.table_name}_seq")
+    begin
+      DB.execute("DROP SEQUENCE #{self.table_name}_seq")
+    rescue OCIError => e
+      STDERR.puts e.inspect
+    end
     super
   end
 
