@@ -117,10 +117,23 @@ def parse_url(url)
   [domain, "/" + path]
 end
 
-domain, path = parse_url(ARGV.shift)
-stats = read_network(domain, path)
-File.open(file_from_path(path), "w") do |f|
-  dump = Marshal.dump(stats)
-  f.write(dump)
-  puts "Wrote #{dump.size} bytes to #{f.path}"
+heights = ["top", "mid", "bot"]
+
+url = "http://www.snow-forecast.com/resorts/%s/hindcasts/2008-12-01/%s"
+
+resorts = File.readlines("list.txt").map { |e| e.chomp! }
+
+resorts.first(2).each do |resort|
+
+  heights.each do |height|
+    domain, path = parse_url(url % [resort, height])
+    stats = read_network(domain, path)
+    File.open(file_from_path(path), "w") do |f|
+      dump = Marshal.dump(stats)
+      f.write(dump)
+      puts "Wrote #{dump.size} bytes to #{f.path}"
+    end
+
+  end
+
 end
