@@ -22,5 +22,6 @@ end
 
 Merb::BootLoader.after_app_loads do
   DB = Sequel::DATABASES.first
+  Sequel::Base.unrestrict_primary_key
   # This will get executed after your app's classes have been loaded.
 end
