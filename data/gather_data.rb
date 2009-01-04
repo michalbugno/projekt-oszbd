@@ -87,8 +87,13 @@ def read_network(domain, path)
       printf("Getting #{domain}#{path}...")
       headers, txt = resource.get(path)
       printf " done."
-      printf(" Parsing...")
       doc = Nokogiri::HTML(txt)
+      if headers.is_a?(Net::HTTPFound)
+        puts " Response is #{headers.class.name}... skipping."
+        path = URI.parse((doc / "a").first['href']).request_uri
+        next
+      end
+      printf(" Parsing...")
       data = parse_text(doc)
       gathered << data
       already_parsed << path
@@ -121,17 +126,22 @@ heights = ["top", "mid", "bot"]
 
 url = "http://www.snow-forecast.com/resorts/%s/hindcasts/2008-12-01/%s"
 
-resorts = File.readlines("list.txt").map { |e| e.chomp! }
+resorts = File.readlines("list.txt").map { |e| e.chomp! }.select { |e| e !~ /\#/ }
 
-resorts.first(2).each do |resort|
+resorts.each do |resort|
 
   heights.each do |height|
     domain, path = parse_url(url % [resort, height])
-    stats = read_network(domain, path)
-    File.open(file_from_path(path), "w") do |f|
-      dump = Marshal.dump(stats)
-      f.write(dump)
-      puts "Wrote #{dump.size} bytes to #{f.path}"
+    filename = file_from_path(path)
+    if File.exists?(filename)
+      puts "File #{filename} already exists... skipping."
+    else
+      stats = read_network(domain, path)
+      File.open(filename, "w") do |f|
+        dump = Marshal.dump(stats)
+        f.write(dump)
+        puts "Wrote #{dump.size} bytes to #{f.path}"
+      end
     end
 
   end
