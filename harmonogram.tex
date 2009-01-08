@@ -30,23 +30,30 @@
 
 \section{Dotychczasowy postęp}
 \begin{itemize}
-\item stworzony crawler do danych
-\item zebrane dane dla 200+ kurortów austriackich
-\item stworzony szkielet aplikacji webowej
-\item stworzony podstawowy schemat bazy danych
-\item połączenie Ruby z Oracle przez OCI8
+\item Utworzono Crawler do danych pogodowych w języku Ruby.
+\item Zebrano dane z parunastu zeszlych miesięcy dla ponad 200 kurortów narciarskich zlokalizowanych na terenie Austrii.
+\item Stworzono szkielet aplikacji webowej we frameworku Merb. 
+Skonfigurowano go oraz połączono z bazą danych Oracle umieszczoną na uczelnianym serwerze.
+\item Utworzono oraz zrealizowano w bazie danych podstawowy schemat tabel oraz relacji konieczny do dalszej pracy aplikacji.
+\item Wykorzystano OCI8 (ruby-oci8) jako interfejs bazy Oracle dla języka Ruby stanowiącego bazę aplikacji webowej.
+\item Przygotowano zestaw danych typu GIS opisujacych cały teren kraju Austriackiego oraz dodatkowe dane zawierającego informacje o elewacji terenu.
 \end{itemize}
 
 \section{TODO}
 \begin{itemize}
-\item wrzucenie danych do bazy
-\item integracja z API GoogleMaps
-\item wizualizacja
+\item Import danych do bazy.
+\item Integracja z API GoogleMaps (rozwiazanie lepsze niż korzystanie z wbudowanych narzędzi Oracla)
+\item Utworzenie silnika pobierania oraz analizy danych z bazy.
+\item Przygotowanie systemu wizualizujacego rezultaty pracy silnika analizy danych.
 \end{itemize}
 
 \section{Problemy}
 \begin{itemize}
-\item OCI8 nie obsługuje SDO\_GEOMETRY
+\item Interfejs OCI8 nie obsługuje SDO\_GEOMETRY - 
+być może trzeba będzie probować powiązać dane GISowe bezposrednio z GoogleMaps i z tamtego poziomu na nich operowac. 
+Alternatywa jest odszukanie niestabilnych rozwiązań obsługi SDO\_GEOMETRY w trunkach ruby-oci8 (poniewaz narazie nie zalezy nam az tak bardzo na stabilnosci całego systemu).
+\item Odnalezienie dokładniejszych danych typu GIS dla interesujacych nas obszarów - 
+Narazie posiadamy dane GIS opisujace cały kraj oraz elewacje jego terenu. Ciężko jest odnaleźć dużo dokładniejsze dane opisujące konkretne kurorty narciarskie.
 \end{itemize}
 
 \end{document}
