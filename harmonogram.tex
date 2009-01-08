@@ -1,0 +1,52 @@
+\documentclass[12pt]{article}
+
+\usepackage{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage[polish]{babel}
+\usepackage{polski}
+\usepackage{hyperref}
+\usepackage{graphicx}
+\usepackage{verbatim}
+\usepackage{acronym}
+\usepackage{fancyhdr}
+\usepackage[usenames]{color}
+
+\hypersetup{
+  linkbordercolor={1 1 1},
+  urlbordercolor={1 1 1},
+  colorlinks=false
+}
+
+\pagestyle{fancy}
+\cfoot{}
+\rfoot{\thepage}
+
+\author{Michał Bugno \and Antek Piechnik}
+\title{Harmonogram prac}
+% W oparciu o bazę danych Oracle z wykorzystaniem technologii Oracle Spatial.
+
+\begin{document}
+\maketitle
+
+\section{Dotychczasowy postęp}
+\begin{itemize}
+\item stworzony crawler do danych
+\item zebrane dane dla 200+ kurortów austriackich
+\item stworzony szkielet aplikacji webowej
+\item stworzony podstawowy schemat bazy danych
+\item połączenie Ruby z Oracle przez OCI8
+\end{itemize}
+
+\section{TODO}
+\begin{itemize}
+\item wrzucenie danych do bazy
+\item integracja z API GoogleMaps
+\item wizualizacja
+\end{itemize}
+
+\section{Problemy}
+\begin{itemize}
+\item OCI8 nie obsługuje SDO\_GEOMETRY
+\end{itemize}
+
+\end{document}

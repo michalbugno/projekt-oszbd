@@ -1,8 +1,8 @@
-doc.aux
-doc.log
-doc.out
-doc.pdf
-doc.toc
+*.aux
+*.log
+*.out
+*.pdf
+*.toc
 *.swp
 .DS_Store
 weather/config/database.yml
