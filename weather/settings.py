@@ -77,3 +77,5 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.sites',
 )
+
+GEOS_LIBRARY_PATH = '/opt/local/lib/libgeos_c.dylib'
