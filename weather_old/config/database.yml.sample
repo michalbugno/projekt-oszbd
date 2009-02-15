@@ -1,9 +1,0 @@
----
-# This is a sample database file for the Sequel ORM
-:development: &defaults
-  :adapter: oracle
-  :user: username
-  :database: database
-  :password: password
-  :host: host
-  :port: port
