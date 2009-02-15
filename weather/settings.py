@@ -82,3 +82,4 @@ INSTALLED_APPS = (
 )
 
 GEOS_LIBRARY_PATH = '/opt/local/lib/libgeos_c.dylib'
+GDAL_LIBRARY_PATH = '/opt/local/lib/libgdal.dylib'
