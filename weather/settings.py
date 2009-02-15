@@ -76,6 +76,9 @@ INSTALLED_APPS = (
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.sites',
+    'django.contrib.admin',
+    'django.contrib.gis',
+    'weather.world'
 )
 
 GEOS_LIBRARY_PATH = '/opt/local/lib/libgeos_c.dylib'
