@@ -1,51 +1,54 @@
-Abtenau
-Achenkirch
+# Get latitude/longitude from here
+# http://itouchmap.com/latlong.html
+
+Abtenau 47.563964,13.344825
+Achenkirch 47.527501,11.707544
 Aflenz
-Alberschwende
-Alpbach
-Altaussee
-Andelsbuch
+Alberschwende 47.450385,9.831301
+Alpbach 47.399093,11.943122
+Altaussee 47.639798,13.764183
+Andelsbuch 47.413191,9.895125
 AnnabergLungotz
-Arabichl
+Arabichl 46.647649,14.310904
 AuffachWildschonau
-Axamer
-Badgastein
+Axamer 47.241905,11.272099
+Badgastein 47.114348,13.135998
 Bad-Hofgastein
 Bad-Kleinkirchheim
 Bergeralm
 BerwangBichlbachRinnen
-Biberwier
-Bizau
-Bodental
-Brand
+Biberwier 47.383649,10.892043
+Bizau 47.369286,9.929337
+Bodental 46.479695,14.234843
+Brand 47.346877,9.900231
 Dachstein-Glacier
-Dalaas
-Damuls
+Dalaas 47.122981,9.999448
+Damuls 47.285208,9.881125
 DefereggentalStJakob
-Diedamskopf
-Dienten
-Donnersbachwald
-Durrnberg
+Diedamskopf 47.346903,10.027326
+Dienten 47.3838,13.004256
+Donnersbachwald 47.395271,14.127
+Durrnberg 47.903236,13.906723
 EbenseeamTraunsee
 EbersteinSaualpe
-Ehrwald
-Ellmau
-Etmissl
-Fanningberg
-Fendels
-Fieberbrunn
-Filzmoos
-Finkenberg
-Fiss
-Flachau
-Flattach
-Flattnitz
+Ehrwald 47.398353,10.920212
+Ellmau 47.513608,12.301607
+Etmissl 47.516402,15.184334
+Fanningberg 47.168607,13.699498
+Fendels 47.05527,10.67704
+Fieberbrunn 47.475885,12.544446
+Filzmoos 47.434361,13.521676
+Finkenberg 47.153995,11.82461
+Fiss 47.064976,10.600675
+Flachau 47.344249,13.39269
+Flattach 46.934352,13.130285
+Flattnitz 46.945378,14.029722
 FontanellaFaschina
-Fugen
-Fulpmes
+Fugen 47.348512,11.852258
+Fulpmes 47.15297,11.348903
 FussenerJochleGran
-Galtur
-Gargellen
+Galtur 46.968506,10.18733
+Gargellen 46.97156,9.918281
 Gaschurn
 Gasteinertal
 Gemeindealpe
