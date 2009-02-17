@@ -27,3 +27,10 @@ class WorldBorders(models.Model):
     # Returns the string representation of the model.
     def __unicode__(self):
         return self.name
+
+class Resorts(models.Model):
+    name = models.CharField(max_length=50)
+    latitude = models.FloatField()
+    longitude = models.FloatField()
+
+    
