@@ -33,4 +33,8 @@ class Resorts(models.Model):
     latitude = models.FloatField()
     longitude = models.FloatField()
 
-    
+    class Meta:
+        verbose_name_plural = "Resorts"
+
+    def __unicode__(self):
+      return self.name
