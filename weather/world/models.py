@@ -1,40 +1,32 @@
 from django.contrib.gis.db import models
+from django.contrib.gis.measure import Distance
 
 class WorldBorders(models.Model):
-    # Regular Django fields corresponding to the attributes in the
-    # world borders shapefile.
     name = models.CharField(max_length=50)
-    area = models.IntegerField()
-    pop2005 = models.IntegerField('Population 2005')
-    fips = models.CharField('FIPS Code', max_length=2)
-    iso2 = models.CharField('2 Digit ISO', max_length=2)
-    iso3 = models.CharField('3 Digit ISO', max_length=3)
-    un = models.IntegerField('United Nations Code')
-    region = models.IntegerField('Region Code')
-    subregion = models.IntegerField('Sub-Region Code')
-    lon = models.FloatField()
     lat = models.FloatField()
-
-    # GeoDjango-specific: a geometry field (MultiPolygonField), and
-    # overriding the default manager with a GeoManager instance.
+    lon = models.FloatField()
     mpoly = models.MultiPolygonField()
     objects = models.GeoManager()
 
-    # So the model is pluralized correctly in the admin.
     class Meta:
         verbose_name_plural = "World Borders"
 
-    # Returns the string representation of the model.
     def __unicode__(self):
         return self.name
 
 class Resorts(models.Model):
     name = models.CharField(max_length=50)
-    latitude = models.FloatField()
-    longitude = models.FloatField()
+    # latitude = models.FloatField()
+    # longitude = models.FloatField()
+    position = models.PointField()
+    objects = models.GeoManager()
 
     class Meta:
         verbose_name_plural = "Resorts"
+
+    def within_distance(self, distance):
+      d = Distance(km=distance)
+      return Resorts.objects.filter(position__dwithin=(self.position, d)).exclude(pk=self.pk)
 
     def __unicode__(self):
       return self.name
