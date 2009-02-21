@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Austria Weather {{ resort.name }}
+{% endblock %}
+
+{% block javascript %}
+displayPoint({{ resort.position.x }}, {{ resort.position.y }}, "{{ resort.name }} <a href=\"{{ resort.get_absolute_url }}\">additional info</a>");
+
+{% for near_resort in near_resorts %}
+  displayPoint({{ near_resort.position.x }}, {{ near_resort.position.y }}, "{{ near_resort.name }} <a href=\"{{ near_resort.get_absolute_url }}\">additional info</a>");
+{% endfor %}
+
+map.setCenter(new GLatLng({{resort.position.y}}, {{ resort.position.x }}), 11);
+
+{% endblock %}

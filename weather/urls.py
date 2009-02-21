@@ -1,7 +1,7 @@
 from django.conf.urls.defaults import *
 from django.contrib.gis import admin
 from django.views.generic.simple import direct_to_template
-
+import os.path
 
 admin.autodiscover()
 
@@ -16,5 +16,7 @@ urlpatterns = patterns('',
     # Uncomment the next line to enable the admin:
     # (r'^admin/(.*)', admin.site.root),
     (r'^$', 'weather.world.views.map'),
+    (r'^resort/(\d+)', 'weather.world.views.resort'),
     (r'^admin/(.*)', admin.site.root),
+    (r'^(?P<path>.*)$', 'django.views.static.serve', {'document_root': os.path.join(os.path.dirname(__file__), 'public').replace('\\','/')}),
 )

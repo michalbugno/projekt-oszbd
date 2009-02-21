@@ -1,49 +1,7 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-  <head>
-    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
-    <title>Austria Weather</title>
-    <script src="http://maps.google.com/maps?file=api&amp;v=2.x&amp;key=ABQIAAAAeNfeYYxx708PMA5E5GKLZxTpH3CbXHjuCVmaTc5MkkU4wO1RRhTieI4bYorBrSakOJ2bsK_unciZGg&sensor=false"
-      type="text/javascript"></script>
-    <script type="text/javascript">
+{% extends "layout.html" %}
 
-    //<![CDATA[
-
-    function load() {
-      if (GBrowserIsCompatible()) {
-        var map = new GMap2(document.getElementById("map"));
-        map.addControl(new GLargeMapControl());
-        map.addControl(new GMapTypeControl());
-        map.setCenter(new GLatLng(47.5619, 13.5619), 7);
-
-        var kml = new GGeoXml("http://student.agh.edu.pl/msq/austria.kml");
-        map.addOverlay(kml)
-
-        function createMarker(point, html) {
-          var marker = new GMarker(point);
-          GEvent.addListener(marker, "click", function() {
-            marker.openInfoWindowHtml(html);
-          });
-          return marker;
-        }
-
-        function displayPoint(latitude, longitude, html) {
-          var point = new GLatLng(longitude, latitude);
-          var marker = createMarker(point, html);
-          map.addOverlay(marker);
-        }
-
-        {% for resort in resorts %}
-          displayPoint({{ resort.position.x }}, {{ resort.position.y }}, "{{ resort.name }} <a href=\"resort/{{ resort.pk }}\">additional info</a>");
-        {% endfor %}
-      }
-    }
-
-//]]>
-</script>
-  </head>
-  <body onload="load()" onunload="GUnload()">
-    <div id="map" style="width:800px; height:600px"></div>
-  </body>
-</html>
+{% block javascript %}
+{% for resort in resorts %}
+  displayPoint({{ resort.position.x }}, {{ resort.position.y }}, "{{ resort.name }} <a href=\"{{ resort.get_absolute_url }}\">additional info</a>");
+{% endfor %}
+{% endblock %}

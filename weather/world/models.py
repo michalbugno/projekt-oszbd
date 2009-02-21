@@ -28,5 +28,8 @@ class Resorts(models.Model):
       d = Distance(km=distance)
       return Resorts.objects.filter(position__dwithin=(self.position, d)).exclude(pk=self.pk)
 
+    def get_absolute_url(self):
+      return "/resort/%i/" % self.id
+
     def __unicode__(self):
       return self.name
