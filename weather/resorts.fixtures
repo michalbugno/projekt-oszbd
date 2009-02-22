@@ -91,111 +91,97 @@ Kirchdorf 12.10885 47.59060
 Kitzbuhel 12.39194 47.44548
 Kleinlobming 14.84936 47.14904
 Klippitztorl 14.68944 46.94327
-Konigsleiten
-Koralpe
-Kramsach
-Kreischberg
-Krimml
-KristbergSilbertal
-Kuhtai
-Lachtal
-LandeckZamsFliess
-Langenwang
-LaternserTal
-Lech
-Leogang
-Lermoos
-Leutasch
-LienzerDolomiten
-LofererAlmBahnen
-LunzamSee
-Mallnitz
-MariazellerLand
-Maurach
-Mauterndorf
-Mayrhofen
-Mittersill
-Molltal-Glacier
-MonichkirchenMariensee
-Monichwald
-Montafon
-MuhlbachamHochkonig
-Muttereralm
-Nassfeld
-Nauders
-Nesselwangle
-Neustift
-Niederau
-Nordpark
-Obdach
-Oberau
-Obergurgl
-Oberperfuss
-Obertauern
-Obertraun
-Ochsengarten
-Oetz
-Palfau
-ParfusswirtlifteTrahutten
-Partenen
-Pertisau
-Pettneu
-Petzen
-PichlMandling
-Pitztal
-Planneralm
-PostAlmArena
-Pruggern
-Radstadt
-Rauris
-ReuttenerSeilbahnen
-Rohrmoos
-Russbach
-Saalbach
-Saalfelden
-Scheffau
-Schladming
-Schmittenhohe
-SchwazPill
-Seefeld
-Serfaus
-Sillian
-SkiArenaWildkogel
-Solden
-Soll
-St-Anton
-St-Chrisptoph
-St-Johann-in-Pongau
-St-Johann-in-Tirol
-St-Michael
-St-Wolfgang
-StGallenkirch
-StLorenzenobMurau
-SteegimLechtal
-Sternstein
-Stoderzinken
-Stubai-Glacier
-Tauplitz
-TelfesinStubai
-Thierbach
-ThomatalSchonfeld
-Tschagguns
-Turnau
-Turracherhohe
-Venet
-Verditz
-VichtensteinHaugstein
+Konigsleiten 12.11984 47.24887
+Kramsach 11.88358 47.44718
+Kreischberg 14.04854 47.05571
+Krimml 12.17531 47.22207
+KristbergSilbertal 9.97865 47.09505
+Kuhtai 11.01637 47.21235
+Lachtal 14.36423 47.24545
+Langenwang 15.61820 47.56664
+LaternserTal 9.70549 47.26590
+Lech 10.38455 47.37671
+Leogang 12.76169 47.43954
+Lermoos 10.88747 47.39852
+Leutasch 11.14271 47.37013
+LienzerDolomiten 12.75993 46.82643
+Mallnitz 13.16958 46.98889
+MariazellerLand 15.31860 47.77361
+Maurach 11.75335 47.42218
+Mauterndorf 13.68028 47.13357
+Mayrhofen 11.86292 47.16691
+Mittersill 12.48163 47.28098
+MonichkirchenMariensee 16.02914 47.51122
+Monichwald 15.88270 47.44744
+Montafon 9.95167 47.04194
+MuhlbachamHochkonig 13.10192 47.38770
+Nassfeld 13.05631 47.05286
+Nauders 10.50263 46.89106
+Nesselwangle 10.60949 47.48515
+Neustift 15.91125 48.13820
+Niederau 10.00998 47.31567
+Obdach 14.69860 47.09746
+Oberau 12.04856 47.44404
+Obergurgl 11.02737 46.87059
+Oberperfuss 11.24943 47.24426
+Obertauern 13.56787 47.24322
+Obertraun 13.68712 47.55710
+Ochsengarten 10.94119 47.22860
+Oetz 10.89273 47.20420
+Palfau 14.80830 47.71062
+Partenen 10.06388 46.96854
+Pertisau 11.69586 47.43983
+Pettneu 10.34053 47.14797
+PichlMandling 13.58565 47.40582
+Pitztal 10.85028 47.06000
+Planneralm 14.20019 47.40473
+Pruggern 13.86907 47.42461
+Radstadt 13.46270 47.38474
+Rauris 12.99437 47.22961
+Rohrmoos 12.03602 47.57551
+Saalbach 12.63693 47.39099
+Saalfelden 12.84918 47.42643
+Scheffau 12.25013 47.52855
+Schladming 13.68742 47.39193
+Schmittenhohe 12.73815 47.32969
+SchwazPill 11.68127 47.32011
+Seefeld 16.17470 48.71593
+Serfaus 10.60773 47.03841
+Sillian 12.41762 46.74760
+SkiArenaWildkogel 12.29740 47.28578
+Solden 11.00738 46.96672
+Soll 12.19169 47.50361
+St-Anton 10.26377 47.12744
+St-Chrisptoph 10.21352 47.12863
+St-Johann-in-Pongau 13.20231 47.34887
+St-Johann-in-Tirol 12.43061 47.52163
+St-Michael 13.63333 47.08561
+StGallenkirch 9.96917 47.02092
+StLorenzenobMurau 14.09345 47.09066
+SteegimLechtal 10.29199 47.24180
+Sternstein 14.26741 48.55984
+Stoderzinken 13.82852 47.45921
+Tauplitz 14.01225 47.56169
+TelfesinStubai 11.35650 47.16396
+Thierbach 11.99615 47.42213
+ThomatalSchonfeld 13.77623 46.98204
+Tschagguns 9.90195 47.07773
+Turnau 15.33850 47.55736
+Turracherhohe 13.87429 46.92143
+Venet 10.66139 47.14861
+Verditz 13.80686 46.71210
+VichtensteinHaugstein 13.65059 48.52800
 Villach 13.84873 46.61597
-Vordernberg
-Wagrain
-Waidring
-Walchsee
-Werfenweng
-Westendorf
-Wildalpen
-WindischgarstenundUmgebung
-Zams
-Zauchensee
-Zell-am-See
-Zell-am-Ziller
+Vordernberg 14.99317 47.48801
+Wagrain 13.29633 47.33360
+Waidring 12.57016 47.58436
+Walchsee 12.31769 47.65125
+Werfenweng 13.25665 47.46134
+Westendorf 12.21445 47.43194
+Wildalpen 14.98609 47.66450
+WindischgarstenundUmgebung 14.32841 47.72192
+Zams 10.58966 47.15797
+Zauchensee 13.44908 47.28219
+Zell-am-See 12.79675 47.32375
+Zell-am-Ziller 11.88161 47.23337
 Zurs 10.16476 47.16875
