@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 
 {% block title %}
-Austria Weather {{ resort.name }}
+Austria Weather : {{ resort.name }}
 {% endblock %}
 
 {% block javascript %}
@@ -13,4 +13,16 @@ displayPoint({{ resort.position.x }}, {{ resort.position.y }}, "{{ resort.name }
 
 map.setCenter(new GLatLng({{resort.position.y}}, {{ resort.position.x }}), 11);
 
+{% endblock %}
+
+{% block sidebar %}
+<div>
+  <h2>{{ resort.name }} in {{ resort.country.name }} </h2>
+  Resorts withing 20km of {{ resort.name }}:
+  <ol>
+    {% for resort in near_resorts %}
+      <li><a href="{{ resort.get_absolute_url }}">{{ resort.name }}</a></li>
+    {% endfor %}
+  </ol>
+</div>
 {% endblock %}

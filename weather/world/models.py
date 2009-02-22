@@ -2,6 +2,9 @@ from django.contrib.gis.db import models
 from django.contrib.gis.measure import Distance
 
 class WorldBorders(models.Model):
+    """
+    CREATE INDEX WORLD_WORLDBORDERSINDEX ON WORLD_WORLDBORDERS(mpoly) INDEXTYPE IS MDSYS.SPATIAL_INDEX;
+    """
     name = models.CharField(max_length=50)
     lat = models.FloatField()
     lon = models.FloatField()
@@ -16,8 +19,6 @@ class WorldBorders(models.Model):
 
 class Resorts(models.Model):
     name = models.CharField(max_length=50)
-    # latitude = models.FloatField()
-    # longitude = models.FloatField()
     position = models.PointField()
     objects = models.GeoManager()
 
@@ -25,11 +26,29 @@ class Resorts(models.Model):
         verbose_name_plural = "Resorts"
 
     def within_distance(self, distance):
-      d = Distance(km=distance)
-      return Resorts.objects.filter(position__dwithin=(self.position, d)).exclude(pk=self.pk)
+        d = Distance(km=distance)
+        return Resorts.objects.filter(position__dwithin=(self.position, d)).exclude(pk=self.pk)
+
+    def country(self):
+        countries = WorldBorders.objects.filter(mpoly__contains=self.position.wkt)
+        if len(countries) > 0:
+            return countries[0]
+        else:
+            return None
 
     def get_absolute_url(self):
-      return "/resort/%i/" % self.id
+        return "/resort/%i/" % self.id
 
     def __unicode__(self):
-      return self.name
+        return self.name
+
+class Measures(models.Model):
+    resort = models.ForeignKey(Resorts)
+    temp = models.IntegerField()
+    taken_at = models.DateField()
+
+    class Meta:
+        verbose_name_plural = "Measures"
+
+    def __unicode__(self):
+        return u"%s (%s)" % (self.resort.name, self.taken_at)

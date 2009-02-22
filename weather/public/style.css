@@ -1,4 +1,40 @@
 #map {
   width: 800px;
   height: 600px;
+  float: right;
+  border-left: 10px solid #585858;
+  border-bottom: 10px solid #585858;
+}
+
+#sidebar {
+  float: left;
+  padding-left: 20px;
+}
+
+body {
+  font-family: 'Verdana';
+  font-size: 12px;
+  margin: 0;
+  padding: 0;
+}
+
+a {
+  color: #272727;
+}
+
+h1, h2, h3 {
+  font-variant: small-caps;
+}
+
+h1 {
+  font-size: 25px;
+}
+
+h2 {
+  font-size: 20px;
+}
+
+#sidebar ul li {
+  list-style-type: none;
+  font-size: 17px;
 }
