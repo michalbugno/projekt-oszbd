@@ -33,7 +33,7 @@ def load_fixtures():
 def load_worldborders():
   WorldBorders.objects.all().delete()
   f = open("worldborders.fixtures")
-  for i in range(0, 1):
+  for i in range(0, 8):
     name = f.next().strip()
     poly = f.next().strip()
     coords = f.next().strip().split(" ")

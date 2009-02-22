@@ -2,10 +2,7 @@ from django.contrib.gis.db import models
 from django.contrib.gis.measure import Distance
 
 class WorldBorders(models.Model):
-    """
-    CREATE INDEX WORLD_WORLDBORDERSINDEX ON WORLD_WORLDBORDERS(mpoly) INDEXTYPE IS MDSYS.SPATIAL_INDEX;
-    """
-    name = models.CharField(max_length=50)
+    name = models.CharField(max_length=50, primary_key=True)
     lat = models.FloatField()
     lon = models.FloatField()
     mpoly = models.MultiPolygonField()
@@ -18,7 +15,7 @@ class WorldBorders(models.Model):
         return self.name
 
 class Resorts(models.Model):
-    name = models.CharField(max_length=50)
+    name = models.CharField(max_length=50, primary_key=True)
     position = models.PointField()
     objects = models.GeoManager()
 
@@ -37,7 +34,7 @@ class Resorts(models.Model):
             return None
 
     def get_absolute_url(self):
-        return "/resort/%i/" % self.id
+        return "/resort/%s/" % self.pk
 
     def __unicode__(self):
         return self.name

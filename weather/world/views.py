@@ -9,8 +9,7 @@ def map(request):
   return render_to_response('map.html', {'resorts' : resorts})
 
 def resort(request, resort_pk):
-  pk = int(resort_pk)
-  resorts = Resorts.objects.filter(pk=pk)
+  resorts = Resorts.objects.filter(pk=resort_pk)
   if len(resorts) != 1:
     return HttpResponse("Not found")
   else:

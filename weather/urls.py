@@ -16,7 +16,7 @@ urlpatterns = patterns('',
     # Uncomment the next line to enable the admin:
     # (r'^admin/(.*)', admin.site.root),
     (r'^$', 'weather.world.views.map'),
-    (r'^resort/(\d+)', 'weather.world.views.resort'),
+    (r'^resort/(.+)/', 'weather.world.views.resort'),
     (r'^admin/(.*)', admin.site.root),
     (r'^(?P<path>.*)$', 'django.views.static.serve', {'document_root': os.path.join(os.path.dirname(__file__), 'public').replace('\\','/')}),
 )
