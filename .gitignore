@@ -5,5 +5,5 @@
 *.toc
 *.swp
 .DS_Store
-weather_old/config/database.yml
 *.pyc
+weather/settings.py
