@@ -14,5 +14,6 @@ def resort(request, resort_pk):
     return HttpResponse("Not found")
   else:
     resort = resorts[0]
-    near_resorts = resort.within_distance(20)
-    return render_to_response('resort.html', {'resort' : resort, 'near_resorts' : near_resorts})
+    within = int(request.GET.get('within', 20))
+    near_resorts = resort.within_distance(within)
+    return render_to_response('resort.html', {'resort' : resort, 'near_resorts' : near_resorts, 'within' : within})

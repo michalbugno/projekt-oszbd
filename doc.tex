@@ -23,7 +23,6 @@
 
 \author{Michał Bugno \and Antek Piechnik}
 \title{Analiza oraz wizualizacja danych meteorologicznych dla wybranych ośrodków narciarskich}
-% W oparciu o bazę danych Oracle z wykorzystaniem technologii Oracle Spatial.
 
 \begin{document}
 \maketitle
@@ -50,7 +49,7 @@ możliwość dokładnego poznania tego produktu w ramach projektu jak również 
 względu na obszerne wsparcie dla danych GIS - Oracle Spatial.
 
 \subsection{Technologia}
-System jest tworzony w technologii Python Django -- posiada ona wpsarcie dla
+System jest tworzony w technologii Python Django -- posiada ona wsparcie dla
 baz Oracle (w tym Spatial) oraz jest prosta i przejrzysta zapewniając
 bardziej elastyczny rozwój.
 
@@ -95,10 +94,20 @@ Zdefiniowane w aplikacji modele to:
     \item[position] dwuwymiarowa geometria \emph{Point} przechowywująca długość i
       szerokość geograficzną miasta
   \end{description}
-\item[Measures]
-  \begin{description}
-  \end{description}
 \end{description}
+
+\subsection{Metody}
+\subsubsection{Wybranie obiektu z bazy}
+\texttt{austria = WorldBorders.objects.filter(pk=Austria)[0]} \\
+\texttt{first\_resort = Resorts.objects.all()[0]}
+
+\subsubsection{Państwo, w którym leży resort}
+\texttt{country = first\_resort.country()} \\
+\texttt{print country.name \# => ``Austria``}
+
+\subsubsection{Najbliższe resorty}
+\texttt{resorts = first\_resort.within\_distance(30)} \\
+\texttt{  \# => resorty w odległości 30km od danego (bez danego)}
 
 \subsection{SQL}
 \subsubsection{Stworzenie tabel}
@@ -106,8 +115,7 @@ Kluczowy dla projektu jest oczywiście typ \emph{SDO\_GEOMETRY} który umożliwi
 specyficznych zapytań geograficznych. Reszta pól to dodatkowe informacje na temat państwa/miasta.
 \begin{verbatim}
 CREATE TABLE "WORLD_WORLDBORDERS" (
-    "ID" NUMBER(11) NOT NULL PRIMARY KEY,
-    "NAME" NVARCHAR2(50) NULL,
+    "NAME" NVARCHAR2(50) NOT NULL PRIMARY KEY,
     "LAT" DOUBLE PRECISION NOT NULL,
     "LON" DOUBLE PRECISION NOT NULL,
     "MPOLY" MDSYS.SDO_GEOMETRY NOT NULL
@@ -116,8 +124,7 @@ CREATE TABLE "WORLD_WORLDBORDERS" (
 
 \begin{verbatim}
 CREATE TABLE "WORLD_RESORTS" (
-    "ID" NUMBER(11) NOT NULL PRIMARY KEY,
-    "NAME" NVARCHAR2(50) NULL,
+    "NAME" NVARCHAR2(50) NOT NULL PRIMARY KEY,
     "POSITION" MDSYS.SDO_GEOMETRY NOT NULL
 );
 \end{verbatim}
@@ -163,7 +170,7 @@ INDEXTYPE IS MDSYS.SPATIAL_INDEX;
 \end{verbatim}
 
 \paragraph{Sekwencje}
-Warto wspomnieć, że tabele mają klucze główne liczbowe i aby nie przejmować się ich numerowaniem
+Warto wspomnieć, że część tabeli ma klucze główne liczbowe i aby nie przejmować się ich numerowaniem
 stworzyć należy sekwencje. Do tego celu użyliśmy:
 \texttt{CREATE SEQUENCE WORLD\_WORLDBORDERS\_SQ}
 i analogiczne dla pozostałych tabel.
@@ -176,7 +183,7 @@ SELECT "WORLD_RESORTS"."ID", "WORLD_RESORTS"."NAME",
 FROM "WORLD_RESORTS"
 WHERE
     (SDO_WITHIN_DISTANCE("WORLD_RESORTS"."POSITION",
-        SDO_GEOMETRY(POINT (10.7498000000000005 46.9629699999999985), 4326),
+        SDO_GEOMETRY(POINT (10.7498 46.96297), 4326),
         \'distance=20000.0\') = \'TRUE\'
     AND NOT ("WORLD_RESORTS"."ID" = 832))
 \end{verbatim}
@@ -193,12 +200,35 @@ SELECT "WORLD_WORLDBORDERS"."ID", "WORLD_WORLDBORDERS"."NAME",
        SDO_UTIL.TO_WKTGEOMETRY("WORLD_WORLDBORDERS"."MPOLY")
 FROM "WORLD_WORLDBORDERS"
 WHERE SDO_CONTAINS("WORLD_WORLDBORDERS"."MPOLY",
-    SDO_GEOMETRY(POINT (10.7498000000000005 46.9629699999999985), 4326)) = \'TRUE\'
+    SDO_GEOMETRY(POINT (10.7498 46.96297), 4326)) = \'TRUE\'
 \end{verbatim}
 W tym wypadku używamy funkcji \emph{SDO\_CONTAINS} która zwraca prawdę, gdy druga gemoetria całkowicie zawiera pierwszą.
 W naszym przypadku pierwszą geometrią jest wielobok przedstawiający granice państwa w tabeli państw natomiast druga to
 punkt reprezentujący ośrodek. W ten sposób zwracamy wszystkie państwa których granice obejmująten punkt (w większości
 przypadków będzie to jeden rekord).
+
+\subsection{Integracja z GoogleMaps API}
+API GoogleMaps jest w języku JavaScript. Wszystkie funkcje, ktorych używamy są zdefiniowane w widokach znajdujących
+się w katalogu \texttt{world/templates}.
+
+Głównym widokiem jest \texttt{layout.html} i on definiuje mapę i podstawowe funkcje wyświetlania resortów.
+
+\subsubsection{Granice Austrii}
+Granice wyświetlane są przez API KML-owe GoogleMaps. Reprezentację KML granic państwa mozna łatwo wyciągnąć z bazy
+danych, jednak API nie pozwala na dynamiczne wyświetlanie plików KML i muszą one być dostępne publicznie w Internecie.
+Z tego powodu wproowadzona jest redundancja danych: w pliku \texttt{world/templates/layout.html} znajduje się linia:
+
+\texttt{var kml = new GGeoXml("http://student.agh.edu.pl/msq/austria.kml");}
+
+która definiuje położenie pliku do wyświetlania. W razie potrzeby taki plik można wygenerować za pomocą następujących
+poleceń:
+
+\begin{verbatim}
+python manage.py shell
+> from world.models import WorldBorders
+> austria = WorldBorders.objects.filter(pk=Austria)[0]
+> print austria.mpoly.kml()
+\end{verbatim}
 
 \section{Crawler}
 Crawler jest napisany w języku Ruby i służy do pobierania danych ze strony
@@ -215,9 +245,16 @@ jest część \emph{Extract}:
 Dane są zapisywane w tej chwili w bardzo prostym formacie, część \emph{Transform} będzie odpowiedzialna
 za ich konwersję do formatu odpowiedniego dla bazy danych
 
+\section{Plan prac}
+\begin{itemize}
+\item import danych pogodowych (historycznych i aktualnych) do bazy danych
+\item analiza danych
+\item wizualizacja danych za pomocą GoogleMaps API
+\end{itemize}
+
 \section{Źródła}
 Wszelkie źródła dostępne są do pobrania przez repozytorium Git pod adresem
 \\
-\url{http://github.com/michalbugno/projekt-oszdb/}
+\url{http://github.com/michalbugno/projekt-oszbd/}
 
 \end{document}

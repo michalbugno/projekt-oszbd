@@ -18,7 +18,11 @@ map.setCenter(new GLatLng({{resort.position.y}}, {{ resort.position.x }}), 11);
 {% block sidebar %}
 <div>
   <h2>{{ resort.name }} in {{ resort.country.name }} </h2>
-  Resorts withing 20km of {{ resort.name }}:
+  <form action="" method="GET">
+    <input type="text" name="within" />
+    <input type="submit" value="Change distance" />
+  </form>
+  Resorts withing {{ within }} km of {{ resort.name }}:
   <ol>
     {% for resort in near_resorts %}
       <li><a href="{{ resort.get_absolute_url }}">{{ resort.name }}</a></li>
