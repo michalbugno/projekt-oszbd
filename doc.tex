@@ -244,12 +244,61 @@ jest część \emph{Extract}:
 
 Dane są zapisywane w tej chwili w bardzo prostym formacie, część \emph{Transform} będzie odpowiedzialna
 za ich konwersję do formatu odpowiedniego dla bazy danych
-
+\newpage
 \section{Plan prac}
 \begin{itemize}
-\item import danych pogodowych (historycznych i aktualnych) do bazy danych
-\item analiza danych
-\item wizualizacja danych za pomocą GoogleMaps API
+
+\item Dane pogodowe (historyczne i aktualne)
+  \begin{itemize}
+  \item Utworzenie odpowiednich tabel do przetrzymywania danych, utworzenie relacji między tabelami.
+  \item Zmapowanie tabel w modelach Django.
+  \item Ustalenie formatu danych oraz ich konwersja do formatu odpowiadającego modelowi w bazie danych.
+  \item Zaimportowanie danych do bazy danych.
+  \item Przyporządkowanie odpowiednich danych do odpowiednich ośrodków.
+  \item Przystosowanie widoków aplikacji do prezentowania danych z tabel w postaci tekstowej.
+  \item Utworzenie skryptów automatyzujących powyższe procesy.
+  \item Utworzenie części aplikacji odpowiedzialnej za bieżącą aktualizację zbieranych danych za pomocą crawlera.
+  \end{itemize}
+
+\item Dane pogodowe prognozowane
+  \begin{itemize}
+  \item Wyszukanie serwisów prognozujących pogodę dla konkretnych regionów w Austrii.
+  \item Dostosowanie crawlera do pobierania danych prognozowanych z różnych serwisów.
+  \item Importowanie, analiza (czy też uśrednianie) danych, przyporządkowanie ich do odpowiednich regionów.
+  \item Umożliwienie wyświetlania prognozowanych danych dla resortów, dla których istnieją pobrane dane (podpierając się GIS).
+  \end{itemize}
+
+\item Interfejs oraz obsługa użytkownika
+  \begin{itemize}
+  \item Implementacja wyszukiwania ośrodków.
+  \item Utworzenie możliwości deklarowania preferencji przez użytkownika, oraz ich zapisywanie.
+  \item Możliwośc wyszukiwania bazującego na preferencjach użytkownika, poszerzenie systemu wyszukiwanie.
+  \item Poprawa estetyki GUI.
+  \end{itemize}
+
+\item Analiza Danych
+  \begin{itemize}
+  \item Implementacja systemu 'przewidującego' pogodę na podstawie poprzednich danych (na życzenie lub w sytuacji gdy dane prognozowane nie są dostępne).
+  \item Porównywanie danych z różnych ośrodków oraz przedstawienie raportów.
+  \item Dobieranie najoptymalniejszego resortu spośród dostępnych raportów na bazie preferencji użytkownika.
+  \item Możliwość zacieśnienia przeszukiwanych/porównywanych resortów tylko i wyłącznie do określonego regionu.
+  \item Dobór ośrodka na podstawie aktualnej pozycji użytkownika (np. odległość od domu/odległość od ośrodka w którym użytkownik znajduje się aktualnie, a np. nie jest zadowolony).
+  \end{itemize}
+
+\item Wizualizacja danych.
+  \begin{itemize}
+  \item Prezentowanie aktualnych danych w postaci różnego rodzaju wykresów (np. stosunek świeżego śniegu do grubości pokrywy śnieżnej, prezentacja temperatur na różnych wysokościach)
+  \item Generowanie wykresów na podstawie danych historycznych (np. temperatury z ostatniego tygodnia)
+  \item Wizualizacja porównawcza różnych ośrodków (prezentacja różnic w temperaturze, wietrze i śniegu dla dwóch lub więcej ośrodków)
+  \item Przedyskutowanie dalszych możliwości wizualizacji danych.
+  \item Wizualizacja danych prognozowanych za pomocą Google Maps API.
+  \end{itemize}
+
+\item Funkcje dodatkowe (opcjonalne)
+  \begin{itemize}
+  \item Próba wykorzystania Google Maps API do prezentowania dokładniejszej odległości danego ośrodka od użytkownika (na podstawie jego aktualnej pozycji np. w preferencjach).
+  \end{itemize}
+
 \end{itemize}
 
 \section{Źródła}
