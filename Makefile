@@ -1,10 +1,7 @@
-all: doc.pdf harmonogram.pdf
+all: doc.pdf
 
-doc.pdf: doc.tex images/data_flow_diagram.pdf images/erd_diagram.pdf
+doc.pdf: doc.tex images/data_flow_diagram.pdf images/erd_diagram.pdf images/logo_agh.pdf
 	texi2pdf doc.tex
-
-harmonogram.pdf: harmonogram.tex
-	texi2pdf harmonogram.tex
 
 clean:
 	rm -rf *.aux *.log *.out *.toc

@@ -14,22 +14,32 @@
 \hypersetup{
   linkbordercolor={1 1 1},
   urlbordercolor={1 1 1},
-  colorlinks=false
+  colorlinks=true
 }
 
 \pagestyle{fancy}
 \cfoot{}
 \rfoot{\thepage}
 
-\author{Michał Bugno \and Antek Piechnik}
-\title{Analiza oraz wizualizacja danych meteorologicznych dla wybranych ośrodków narciarskich}
+\author{\textbf{Michał Bugno} \and \textbf{Antek Piechnik} \and prowadzący: \textbf{dr inż. Robert Marcjan}}
+\title{
+Analiza oraz wizualizacja danych meteorologicznych dla wybranych ośrodków narciarskich
+\begin{figure*}[h]
+  \centerline{
+    \includegraphics[scale=1.0]{images/logo_agh.pdf}
+  }
+\end{figure*}
+}
 
 \begin{document}
+
 \maketitle
+\newpage
 \tableofcontents
 \newpage
 
-\section{Wizja projektu}
+\section{Wstęp}
+\subsection{Wizja}
 Głównym zadaniem projektu jest poznanie struktury
 danych typu GIS (geographical information system), jak również analiza oraz
 wykorzystanie tego typu danych w wizualizacji danych meteorologicznych. System
@@ -40,6 +50,13 @@ historycznych na życzenie użytkownika. Do celów badania wydajności systemu
 wykorzystywane będą dane z przynajmniej dwóch źródeł informacji
 meteorologicznej, podczas gdy system ma domyślnie obsługiwać 4-5 stacji
 narciarskich (po kilka punktów na każdą stację).
+
+\subsection{Ocena ryzyka}
+Technologia Django (w konsekwencji również Python) daje dobre perspektywy rozwoju:
+Python jest językiem bogatym w biblioteki (m.in. do Oracle) i jako język dynamiczny
+daje możliwość łatwego rozszerzania aplikacji. Dobrze rokuje także projekt GeoDjango
+(\url{http://geodjango.org/}) w związku z czym można sądzić, że nie napotkamy na
+większe problemy implementacyjne (związane z technologią).
 
 \section{Ogólna struktura systemu}
 
@@ -53,26 +70,24 @@ System jest tworzony w technologii Python Django -- posiada ona wsparcie dla
 baz Oracle (w tym Spatial) oraz jest prosta i przejrzysta zapewniając
 bardziej elastyczny rozwój.
 
-\subsection{Aplikacja pobierająca dane z internetu (crawler)}
-Aplikacja będzie w rzeczywistości skryptem mającym na celu pobranie
+\subsection{Crawler}
+Aplikacja jest w rzeczywistości skryptem mającym na celu pobranie
 odpowiednich danych z wcześniej przygotowanych źródeł (stron internetowych
     udostępniających informacje meteorologiczne dla konkretnych ośrodków).
 Będzie on miał również możliwość aktualizowania bazy danych o pobrane
 informacje, po uprzednich skonwertowaniu ich do odpowiedniego formatu.
 
-\subsection{Renderer graficzny}
-Renderer zostanie utworzony w oparciu o dane wygenerowane przez kontroler
+\subsection{Wizualizacja}
+Wizualizacja zostanie utworzona w oparciu o dane wygenerowane przez kontroler
 analizy danych oraz o API systemu Google Maps który pozwoli na estetyczną
 wizualizację osiągniętych wyników analizy.
 
 \includegraphics[width=35em]{images/data_flow_diagram.pdf}
 
 \subsection{Entity Relationship Diagram}
-Do momentu ustabilizowania bazy danych Oracle na serwerze AGH będziemy starali
-się pracować na dostępnych za darmo silnikach typu Oracle Express (XE)
-  postawionych na lokalnych maszynach, z uwzględnieniem możliwości
-  przystosowania na nich aplikacji sprawnej w pełnej wersji Oracle. Wstępnie
-  przewidujemy taki model istotnych danych:
+Poniższy model danych nie jest dokładny, to znaczy tabele \texttt{resorts}
+oraz \texttt{worldborders} są już stworzone natomiast pomiary zostaną dodane
+dopiero po stworzeniu crawlera w związku z czym model może nie wyglądać tak samo.
 
 \includegraphics[width=35em]{images/erd_diagram.pdf}
 
@@ -85,13 +100,13 @@ Zdefiniowane w aplikacji modele to:
   \item[name] nazwa państwa
   \item[lat] szerokość geograficzna
   \item[lon] długość geograficzna
-  \item[mpoly] typ \emph{SDO\_GEOMETRY} przechowywujący \emph{MultiPolygon} który
+  \item[mpoly] typ \texttt{SDO\_GEOMETRY} przechowywujący \texttt{MultiPolygon} który
     definiuje granice państwa
   \end{description}
 \item[Resorts] przechowuje ośrodki dla których posiadamy dane pogodowe. Pola:
   \begin{description}
     \item[name] nazwa miasta
-    \item[position] dwuwymiarowa geometria \emph{Point} przechowywująca długość i
+    \item[position] dwuwymiarowa geometria \texttt{Point} przechowywująca długość i
       szerokość geograficzną miasta
   \end{description}
 \end{description}
@@ -111,7 +126,7 @@ Zdefiniowane w aplikacji modele to:
 
 \subsection{SQL}
 \subsubsection{Stworzenie tabel}
-Kluczowy dla projektu jest oczywiście typ \emph{SDO\_GEOMETRY} który umożliwia wykonywanie
+Kluczowy dla projektu jest oczywiście typ \texttt{SDO\_GEOMETRY} który umożliwia wykonywanie
 specyficznych zapytań geograficznych. Reszta pól to dodatkowe informacje na temat państwa/miasta.
 \begin{verbatim}
 CREATE TABLE "WORLD_WORLDBORDERS" (
@@ -143,8 +158,8 @@ CREATE TABLE "WORLD_MEASURES" (
 
 \paragraph{Ustawienia metryki}
 Aby Oracle wiedział, jak wygląda metryka, należy poinformować go ustalając odpowiednie wartości graniczne
-oraz dokładność dla kolumn Spatial. W tym wypadku informujemy, że kolumna \emph{MPOLY} tabeli
-\emph{WORLD\_WORLDBORDERS} posiada zakres długości od -180 do 180 oraz szerokości od -90 do 90 z dokładnością
+oraz dokładność dla kolumn Spatial. W tym wypadku informujemy, że kolumna \texttt{MPOLY} tabeli
+\texttt{WORLD\_WORLDBORDERS} posiada zakres długości od -180 do 180 oraz szerokości od -90 do 90 z dokładnością
 co 0.05.
 
 \begin{verbatim}
@@ -187,10 +202,10 @@ WHERE
         \'distance=20000.0\') = \'TRUE\'
     AND NOT ("WORLD_RESORTS"."ID" = 832))
 \end{verbatim}
-\emph{SDO\_WITHIN\_DISTANCE} to funkcja sprawdzająca czy geometria z pierwszego argumentu znajduje się w pewnej
+\texttt{SDO\_WITHIN\_DISTANCE} to funkcja sprawdzająca czy geometria z pierwszego argumentu znajduje się w pewnej
 odległości od geometrii drugiego. Jak widać drugą geometrię tworzymy przedstawiając dane geograficzne ośrodka
 w postaci Well-Known Text: \texttt{POINT(10.749, 46.962)} pierwsza jest natomiast do tej postaci konwertowana
-przez funkcję \emph{TO\_WKTGEOMETRY}. Trzeci argument to odległość jako liczba metrów. Cała
+przez funkcję \texttt{TO\_WKTGEOMETRY}. Trzeci argument to odległość jako liczba metrów. Cała
 funkcja zwraca true gdy warunek spełniony.
 
 \paragraph{Państwo, w którym znajduje się ośrodek}
@@ -202,7 +217,7 @@ FROM "WORLD_WORLDBORDERS"
 WHERE SDO_CONTAINS("WORLD_WORLDBORDERS"."MPOLY",
     SDO_GEOMETRY(POINT (10.7498 46.96297), 4326)) = \'TRUE\'
 \end{verbatim}
-W tym wypadku używamy funkcji \emph{SDO\_CONTAINS} która zwraca prawdę, gdy druga gemoetria całkowicie zawiera pierwszą.
+W tym wypadku używamy funkcji \texttt{SDO\_CONTAINS} która zwraca prawdę, gdy druga gemoetria całkowicie zawiera pierwszą.
 W naszym przypadku pierwszą geometrią jest wielobok przedstawiający granice państwa w tabeli państw natomiast druga to
 punkt reprezentujący ośrodek. W ten sposób zwracamy wszystkie państwa których granice obejmująten punkt (w większości
 przypadków będzie to jeden rekord).
@@ -211,99 +226,123 @@ przypadków będzie to jeden rekord).
 API GoogleMaps jest w języku JavaScript. Wszystkie funkcje, ktorych używamy są zdefiniowane w widokach znajdujących
 się w katalogu \texttt{world/templates}.
 
-Głównym widokiem jest \texttt{layout.html} i on definiuje mapę i podstawowe funkcje wyświetlania resortów.
+Głównym widokiem jest \texttt{layout.html} i on definiuje mapę i podstawowe funkcje wyświetlania resortów. Należy pamiętać,
+że GoogleMaps działają tylko dla domeny, która została podana przy generowania klucza, dlatego jeśli domena będzie inna
+(aktualnie \texttt{http://localhost:8000}) należy \href{http://code.google.com/apis/maps/signup.html}{wygenerować nowy klucz}
+i zmienić widok \texttt{world/templates/layout.html}.
 
 \subsubsection{Granice Austrii}
 Granice wyświetlane są przez API KML-owe GoogleMaps. Reprezentację KML granic państwa mozna łatwo wyciągnąć z bazy
 danych, jednak API nie pozwala na dynamiczne wyświetlanie plików KML i muszą one być dostępne publicznie w Internecie.
-Z tego powodu wproowadzona jest redundancja danych: w pliku \texttt{world/templates/layout.html} znajduje się linia:
-
-\texttt{var kml = new GGeoXml("http://student.agh.edu.pl/msq/austria.kml");}
-
+Z tego powodu wproowadzona jest redundancja danych: w pliku \texttt{world/templates/layout.html} znajduje się linia
+\begin{verbatim}
+var kml = new GGeoXml("http://student.agh.edu.pl/msq/austria.kml");
+\end{verbatim}
 która definiuje położenie pliku do wyświetlania. W razie potrzeby taki plik można wygenerować za pomocą następujących
 poleceń:
 
 \begin{verbatim}
 python manage.py shell
 > from world.models import WorldBorders
-> austria = WorldBorders.objects.filter(pk=Austria)[0]
-> print austria.mpoly.kml()
+> austria = WorldBorders.objects.filter(pk="Austria")[0]
+> print austria.mpoly.kml
 \end{verbatim}
+
+\subsection{Fikstury}
+Dane do aplikacji mogą zostać ponownie załadowane do bazy (włącznie z uprzednim jej wyczyszczeniem). W plikach
+\texttt{worldborders.fixtures} i \texttt{resorts.fixtures} znajdują się odpowiednie dane w prostym formacie tekstowym.
+Aby załadować je do bazy należy wykonać następujące polecenia:
+\begin{verbatim}
+python manage.py shell
+> from world import load
+> load.load_fixtures()
+> # lub load.load_worldborders()
+> # lub load.load_resorts()
+\end{verbatim}
+Metoda \texttt{load.load\_fixtures()} czyści bazę i tworzy wszystkie fikstury natomiast metody \texttt{load.load\_worldborders()}
+i \texttt{load.load\_resorts()} działają na poszczególnych tabelach.
 
 \section{Crawler}
 Crawler jest napisany w języku Ruby i służy do pobierania danych ze strony
 \\\url{http://www.snow-forecast.com}.
-Docelowo będzie to prosty skrypt oparty o metodologię \emph{Extract--Transform--Load}. W tej chwili zaimplementowana
-jest część \emph{Extract}:
+Docelowo będzie to prosty skrypt oparty o metodologię \emph{Extract--Transform--Load}.
+\subsection{Extract}
 \begin{itemize}
 \item uruchamiamy skrypt z parametrem adresu strony (w zasadzie chodzi o wybrany szczyt)
 \item skrypt analizuje stronę za pomocą parsera HTML+XML Nokogiri
 \item dane zapisywane są w prostej postaci w tablicy
 \item skrypt znajduje link do danych z poprzedniego okresu, odwiedza go i powtarza proces
 \end{itemize}
+Dane zapisywane są przez
+\begin{verbatim}
+file = File.open(filename, "w")
+file.write(Marshal.dump(data))
+\end{verbatim}
+Aby je odczytać wystarczy
+\begin{verbatim}
+data = Marshal.load(File.read(filename))
+\end{verbatim}
 
-Dane są zapisywane w tej chwili w bardzo prostym formacie, część \emph{Transform} będzie odpowiedzialna
-za ich konwersję do formatu odpowiedniego dla bazy danych
-\newpage
 \section{Plan prac}
+Plan jest ułożony malejąco względem priorytetów.
+\subsection{Crawler}
 \begin{itemize}
-
-\item Dane pogodowe (historyczne i aktualne)
-  \begin{itemize}
-  \item Utworzenie odpowiednich tabel do przetrzymywania danych, utworzenie relacji między tabelami.
-  \item Zmapowanie tabel w modelach Django.
-  \item Ustalenie formatu danych oraz ich konwersja do formatu odpowiadającego modelowi w bazie danych.
-  \item Zaimportowanie danych do bazy danych.
-  \item Przyporządkowanie odpowiednich danych do odpowiednich ośrodków.
-  \item Przystosowanie widoków aplikacji do prezentowania danych z tabel w postaci tekstowej.
-  \item Utworzenie skryptów automatyzujących powyższe procesy.
-  \item Utworzenie części aplikacji odpowiedzialnej za bieżącą aktualizację zbieranych danych za pomocą crawlera.
-  \end{itemize}
-
-\item Dane pogodowe prognozowane
-  \begin{itemize}
-  \item Wyszukanie serwisów prognozujących pogodę dla konkretnych regionów w Austrii.
-  \item Dostosowanie crawlera do pobierania danych prognozowanych z różnych serwisów.
-  \item Importowanie, analiza (czy też uśrednianie) danych, przyporządkowanie ich do odpowiednich regionów.
-  \item Umożliwienie wyświetlania prognozowanych danych dla resortów, dla których istnieją pobrane dane (podpierając się GIS).
-  \end{itemize}
-
-\item Interfejs oraz obsługa użytkownika
-  \begin{itemize}
-  \item Implementacja wyszukiwania ośrodków.
-  \item Utworzenie możliwości deklarowania preferencji przez użytkownika, oraz ich zapisywanie.
-  \item Możliwośc wyszukiwania bazującego na preferencjach użytkownika, poszerzenie systemu wyszukiwanie.
-  \item Poprawa estetyki GUI.
-  \end{itemize}
-
-\item Analiza Danych
-  \begin{itemize}
-  \item Implementacja systemu 'przewidującego' pogodę na podstawie poprzednich danych (na życzenie lub w sytuacji gdy dane prognozowane nie są dostępne).
-  \item Porównywanie danych z różnych ośrodków oraz przedstawienie raportów.
-  \item Dobieranie najoptymalniejszego resortu spośród dostępnych raportów na bazie preferencji użytkownika.
-  \item Możliwość zacieśnienia przeszukiwanych/porównywanych resortów tylko i wyłącznie do określonego regionu.
-  \item Dobór ośrodka na podstawie aktualnej pozycji użytkownika (np. odległość od domu/odległość od ośrodka w którym użytkownik znajduje się aktualnie, a np. nie jest zadowolony).
-  \end{itemize}
-
-\item Wizualizacja danych.
-  \begin{itemize}
-  \item Prezentowanie aktualnych danych w postaci różnego rodzaju wykresów (np. stosunek świeżego śniegu do grubości pokrywy śnieżnej, prezentacja temperatur na różnych wysokościach)
-  \item Generowanie wykresów na podstawie danych historycznych (np. temperatury z ostatniego tygodnia)
-  \item Wizualizacja porównawcza różnych ośrodków (prezentacja różnic w temperaturze, wietrze i śniegu dla dwóch lub więcej ośrodków)
-  \item Przedyskutowanie dalszych możliwości wizualizacji danych.
-  \item Wizualizacja danych prognozowanych za pomocą Google Maps API.
-  \end{itemize}
-
-\item Funkcje dodatkowe (opcjonalne)
-  \begin{itemize}
-  \item Próba wykorzystania Google Maps API do prezentowania dokładniejszej odległości danego ośrodka od użytkownika (na podstawie jego aktualnej pozycji np. w preferencjach).
-  \end{itemize}
-
+  \item część \emph{Transform} przerabiające surowe dane na potrzeby aplikacji
+  \item część \emph{Load} tworząca SQL-e i wykonująca je w kontekście bazy
 \end{itemize}
 
-\section{Źródła}
-Wszelkie źródła dostępne są do pobrania przez repozytorium Git pod adresem
-\\
-\url{http://github.com/michalbugno/projekt-oszbd/}
+\subsection{Import danych}
+\begin{itemize}
+  \item utworzenie odpowiednich tabel do przetrzymywania danych, utworzenie relacji między tabelami
+  \item zmapowanie tabel w modelach Django
+  \item ustalenie formatu danych oraz ich konwersja do formatu odpowiadającego modelowi w bazie danych
+  \item zaimportowanie danych do bazy danych
+  \item utworzenie części aplikacji odpowiedzialnej za aktualizację zbieranych danych
+\end{itemize}
+
+\subsection{Analiza danych}
+\begin{itemize}
+  \item umożliwienie wyświetlania prognozowanych danych dla resortów, dla których istnieją pobrane dane
+        (podpierając się GIS)
+  \item implementacja systemu 'przewidującego' pogodę na podstawie poprzednich danych (na życzenie lub w
+        sytuacji gdy dane prognozowane nie są dostępne)
+  \item porównywanie danych z różnych ośrodków oraz przedstawienie raportów
+  \item dobieranie najoptymalniejszego resortu spośród dostępnych raportów na bazie preferencji użytkownika
+  \item możliwość zacieśnienia przeszukiwanych/porównywanych resortów tylko i wyłącznie do określonego regionu
+  \item dobór ośrodka na podstawie aktualnej pozycji użytkownika (np. odległość od domu/odległość od ośrodka
+        w którym użytkownik znajduje się aktualnie, a np. nie jest zadowolony)
+\end{itemize}
+
+\subsection{Wizualizacja danych}
+\begin{itemize}
+  \item prezentowanie aktualnych danych w postaci różnego rodzaju wykresów (np. stosunek świeżego śniegu
+        do grubości pokrywy śnieżnej, prezentacja temperatur na różnych wysokościach)
+  \item generowanie wykresów na podstawie danych historycznych (np. temperatury z ostatniego tygodnia)
+  \item wizualizacja porównawcza różnych ośrodków (prezentacja różnic w temperaturze, wietrze i śniegu dla
+        dwóch lub więcej ośrodków)
+  \item przedyskutowanie dalszych możliwości wizualizacji danych
+  \item wizualizacja danych prognozowanych za pomocą Google Maps API
+\end{itemize}
+
+\subsection{Dodatkowe}
+\begin{itemize}
+  \item wyszukanie serwisów prognozujących pogodę dla konkretnych regionów w Austrii (dostosowanie crawlera)
+  \item implementacja wyszukiwania ośrodków
+  \item utworzenie możliwości deklarowania preferencji przez użytkownika oraz ich zapisywanie
+  \item możliwośc wyszukiwania bazującego na preferencjach użytkownika, poszerzenie systemu wyszukiwania
+  \item próba wykorzystania Google Maps API do prezentowania dokładniejszej odległości danego ośrodka od
+        użytkownika (na podstawie jego aktualnej pozycji np. w preferencjach)
+\end{itemize}
+
+\section{Linki}
+\begin{description}
+  \item[Źródła (repozytorium Git)] \url{http://github.com/michalbugno/projekt-oszbd/}
+  \item[Projekt Django] \url{http://www.djangoproject.com/}
+  \item[Projekt GeoDjango] \url{http://geodjango.org/}
+  \item[API GoogleMaps] \url{http://code.google.com/apis/maps/documentation/}
+  \item[System kontroli wersji Git] \url{http://git-scm.com/}
+  \item[Python] \url{http://www.python.org/}
+  \item[Ruby] \url{http://www.ruby-lang.org/}
+\end{description}
 
 \end{document}
