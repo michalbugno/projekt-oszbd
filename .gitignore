@@ -1,7 +1,6 @@
 *.aux
 *.log
 *.out
-doc.pdf
 *.toc
 *.swp
 .DS_Store
