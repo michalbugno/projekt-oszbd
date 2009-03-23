@@ -6,3 +6,6 @@
 .DS_Store
 *.pyc
 weather/settings.py
+data/data
+data/data/*
+doc.pdf

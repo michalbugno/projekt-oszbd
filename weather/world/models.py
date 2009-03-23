@@ -40,12 +40,23 @@ class Resorts(models.Model):
         return self.name
 
 class Measures(models.Model):
+    id = models.AutoField(primary_key=True)
     resort = models.ForeignKey(Resorts)
-    temp = models.IntegerField()
     taken_at = models.DateField()
+    time_of_day = models.CharField(max_length=10)
+    clouds = models.CharField(max_length=20)
+    wind = models.CharField(max_length=5)
+    summary = models.CharField(max_length=20)
+    snowfall = models.IntegerField()
+    rainfall = models.IntegerField()
+    max_temp = models.IntegerField()
+    min_temp = models.IntegerField()
+    wind_chill = models.IntegerField()
+    freezing_level = models.IntegerField()
+
 
     class Meta:
         verbose_name_plural = "Measures"
 
     def __unicode__(self):
-        return u"%s (%s)" % (self.resort.name, self.taken_at)
+        return u"%s (%s - %s)" % (self.resort.name, self.taken_at, self.time_of_day)
