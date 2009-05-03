@@ -33,40 +33,44 @@ class Resorts(models.Model):
         else:
             return None
 
+    def measure_resorts(self):
+        return MeasuresResorts.objects.filter(resort__name=self.name)
+
     def get_absolute_url(self):
         return "/resort/%s/" % self.pk
 
     def __unicode__(self):
         return self.name
 
+
+class MeasuresResorts(models.Model):
+    id = models.AutoField(primary_key=True)
+    resort = models.ForeignKey(Resorts)
+    altitude = models.IntegerField()
+
+    class Meta:
+        verbose_name_plural = "MeasuresResorts"
+
+    def __unicode__(self):
+        return u"%s at %dm" % (self.resort, self.altitude)
+
+
 class Measures(models.Model):
     id = models.AutoField(primary_key=True)
-    clouds = models.CharField(max_length=20)
-    wind = models.CharField(max_length=5)
-    summary = models.CharField(max_length=20)
-    snowfall = models.IntegerField()
-    rainfall = models.IntegerField()
+    measure_resort = models.ForeignKey(MeasuresResorts)
+    taken_at = models.DateTimeField()
+    # freezing_level = models.IntegerField()
+    # clouds = models.CharField(max_length=20)
+    # wind = models.CharField(max_length=5)
+    # summary = models.CharField(max_length=20)
+    # snowfall = models.IntegerField()
+    # rainfall = models.IntegerField()
     max_temp = models.IntegerField()
     min_temp = models.IntegerField()
-    wind_chill = models.IntegerField()
-
+    # wind_chill = models.IntegerField()
 
     class Meta:
         verbose_name_plural = "Measures"
 
     def __unicode__(self):
-        return u"%s" % (self.id)
-
-class MeasuresResorts(models.Model):
-    id = models.AutoField(primary_key=True)
-    resort = models.ForeignKey(Resorts)
-    measure = models.ForeignKey(Measures)
-    taken_at = models.DateTimeField()
-    altitude = models.IntegerField()
-    freezing_level = models.IntegerField()
-
-    class Meta:
-        verbose_name_plural = "MeasuresReports"
-
-    def __unicode__(self):
-        return u"%s (%s - %s)" % (self.resort, self.taken_at, self.time_of_day)
+        return u"Measure taken at %s" % (self.taken_at)
