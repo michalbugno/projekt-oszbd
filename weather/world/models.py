@@ -47,6 +47,7 @@ class MeasuresResorts(models.Model):
     id = models.AutoField(primary_key=True)
     resort = models.ForeignKey(Resorts)
     altitude = models.IntegerField()
+    objects = models.GeoManager()
 
     def measures(self):
         return Measures.objects.filter(measure_resort=self)
@@ -71,6 +72,7 @@ class Measures(models.Model):
     max_temp = models.IntegerField()
     min_temp = models.IntegerField()
     # wind_chill = models.IntegerField()
+    objects = models.GeoManager()
 
     class Meta:
         verbose_name_plural = "Measures"
