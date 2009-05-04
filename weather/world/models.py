@@ -48,6 +48,9 @@ class MeasuresResorts(models.Model):
     resort = models.ForeignKey(Resorts)
     altitude = models.IntegerField()
 
+    def measures(self):
+        return Measures.objects.filter(measure_resort=self)
+
     class Meta:
         verbose_name_plural = "MeasuresResorts"
 
