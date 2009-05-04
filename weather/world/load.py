@@ -73,7 +73,11 @@ def load_measure(resort):
     measure_resort = measure_resorts[0]
     print "Measure resort for %s already exists" % (resort.name)
 
-  data_list = yaml.load(file.read(open(path, 'r')))
+  try:
+    data_list = yaml.load(file.read(open(path, 'r')))
+  except:
+    print "File %s not found, skipping" % (path)
+    return
 
   measures = measure_resort.measures()
   print "YAML fixtures: %d, in database: %d" % (len(data_list), len(measures))
