@@ -1,5 +1,7 @@
 from django.contrib.gis.db import models
 from django.contrib.gis.measure import Distance
+from world.drawer import Drawer
+from django import db
 
 class WorldBorders(models.Model):
     name = models.CharField(max_length=50, primary_key=True)
@@ -35,6 +37,37 @@ class Resorts(models.Model):
 
     def measure_resorts(self):
         return MeasuresResorts.objects.filter(resort__name=self.name)
+
+
+    def draw_isoterms(self, date, temps, buffer_width, distance, filename):
+        a = WorldBorders.objects.filter(name='Austria')[0]
+        d = Drawer(a.mpoly.coords[0][0])
+        for temp in temps:
+          d.draw_poly(self.similar_coords(date, temp, buffer_width, distance))
+        d.save(filename)
+
+
+    def similar_coords(self, date, temperature, buffer_width, distance):
+        distance_km = Distance(km=distance)
+        points = None
+        # points_data = Resorts.objects.filter(position__dwithin=(self.position, distance_km), measuresresorts__measures__min_temp__lt=temperature, measuresresorts__measures__taken_at=date).unionagg()
+        points_data = Resorts.objects.filter(position__dwithin=(self.position, distance_km), measuresresorts__measures__min_temp__lt=temperature).unionagg()
+
+        points = points_data.coords
+        points_string = str(points + points[0]).replace("(", "").replace(")", "")
+
+        cursor = db.connection.cursor()
+        # sql = "SELECT SDO_UTIL.TO_WKTGEOMETRY(SDO_GEOM.SDO_BUFFER(MDSYS.SDO_GEOMETRY(2003, 4326, NULL, SDO_ELEM_INFO_ARRAY(1, 2003, 1), SDO_ORDINATE_ARRAY(%s)), 5000, 50, 'unit=m')) FROM WORLD_WORLDBORDERS;" % (points_string)
+        sql = "SELECT SDO_UTIL.TO_WKTGEOMETRY(SDO_GEOM.SDO_BUFFER(SDO_GEOM.SDO_BUFFER(SDO_GEOM.SDO_CONVEXHULL(MDSYS.SDO_GEOMETRY(2003, 4326, NULL, SDO_ELEM_INFO_ARRAY(1, 2003, 1), SDO_ORDINATE_ARRAY(%s)), 50), %d, 50, 'unit=m'), %d, 50, 'unit=m')) FROM WORLD_WORLDBORDERS;" % (points_string, - buffer_width * 1000, (buffer_width) * 1000)
+        print sql
+        cursor.execute(sql)
+        output = cursor.fetchone()[0]
+
+        poly_coords = []
+        for coords in str(output)[8:].replace("(", "").replace(")", "").split(", "):
+            poly_coords.append(map(float, coords.split(" ")))
+        return poly_coords
+
 
     def get_absolute_url(self):
         return "/resort/%s/" % self.pk

@@ -21,6 +21,10 @@ class Drawer:
       self.draw.ellipse(box, fill=fill)
 
 
+  def draw_line(self, coords, width, fill='red'):
+    self.draw.line(self.coord_mapper(coords), width=width, fill=fill)
+
+
   def analyze_coords(self, coords):
     xs, ys = zip(*coords)
     minx = min(xs)
