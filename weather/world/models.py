@@ -49,9 +49,10 @@ class Resorts(models.Model):
 
     def similar_coords(self, date, temperature, buffer_width, distance):
         distance_km = Distance(km=distance)
+        date = date.date()
         points = None
-        # points_data = Resorts.objects.filter(position__dwithin=(self.position, distance_km), measuresresorts__measures__min_temp__lt=temperature, measuresresorts__measures__taken_at=date).unionagg()
-        points_data = Resorts.objects.filter(position__dwithin=(self.position, distance_km), measuresresorts__measures__min_temp__lt=temperature).unionagg()
+        points_data = Resorts.objects.filter(position__dwithin=(self.position, distance_km), measuresresorts__measures__min_temp__lt=temperature, measuresresorts__measures__taken_at=date).unionagg()
+        #points_data = Resorts.objects.filter(position__dwithin=(self.position, distance_km), measuresresorts__measures__min_temp__lt=temperature).unionagg()
 
         points = points_data.coords
         points_string = str(points + points[0]).replace("(", "").replace(")", "")
