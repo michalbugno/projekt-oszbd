@@ -93,6 +93,7 @@ dopiero po stworzeniu crawlera w związku z czym model może nie wyglądać tak 
 
 \section{Aplikacja Django}
 \subsection{Modele}
+Wszystkie modele zawierają pole objects typu \texttt{models.GeoManager} który odpowiada za wspieranie zapytan Spatialowych.
 Zdefiniowane w aplikacji modele to:
 \begin{description}
 \item[WorldBorders] odpowiada za przechowywanie granic państw. Pola modelu:
@@ -109,7 +110,20 @@ Zdefiniowane w aplikacji modele to:
     \item[position] dwuwymiarowa geometria \texttt{Point} przechowywująca długość i
       szerokość geograficzną miasta
   \end{description}
+\item[MeasuresResorts] przechowuje dane dotyczące pomiarów w ośrodkach na różnych wysokościach.
+  \begin{description}
+    \item[resort] (FK) klucz obcy do tabeli Resorts, przechowuje id resortu którego dotyczy pomiar.
+    \item[altitude] wysokośc n.p.m.
+  \end{description}
+\item[Measures] przechowuje poszczególne pomiary.
+  \begin{description}
+    \item[measure\_resort] (FK) klucz obcy do tabeli MeasuresResorts, przechowuje id ktorego konkretny pomiar dotyczy
+    \item[taken\_at] typ \texttt{Datetime} przechowujący czas pomiaru.
+    \item[max\_temp] maksymalna temperatura
+    \item[min\_temp] minimalna temperatura
+  \end{description}
 \end{description}
+
 
 \subsection{Metody}
 \subsubsection{Wybranie obiektu z bazy}
@@ -261,6 +275,53 @@ python manage.py shell
 \end{verbatim}
 Metoda \texttt{load.load\_fixtures()} czyści bazę i tworzy wszystkie fikstury natomiast metody \texttt{load.load\_worldborders()}
 i \texttt{load.load\_resorts()} działają na poszczególnych tabelach.
+
+\subsection{Wizualizacja danych}
+W celu wizualizacji danych ściśle powiązanych z GIS wykorzystaliśmy dostępne w Oracle Spatial metody do pracy na wcześniej utworzonych oraz do tworzenia struktur GIS. Poza tym skorzystaliśmy z modułu PIL (Python Imaging Library) do tworzenia obrazów z otrzymanych danych typu WKT (Well-known text)
+
+\subsection{Metody Oracle Spatial}
+\subsubsection{SDO\_UTIL.TO\_WKTGEOMETRY}
+Konwertuje zadany obiekt typu SDO\_GEOMETRY do typu WKT - well-known text.
+\subsubsection{SDO\_GEOM.SDO\_BUFFER}
+Tworzy wokół obiektu strefę buforową o zadanych parametrach (odległość oraz tolerancja)
+\subsubsection{SDO\_GEOM.SDO\_CONVEXHULL}
+Zwraca polygon wypukły oparty na elementach zadanego obiektu typu SDO\_GEOMETRY
+\subsubsection{MDSYS.SDO\_GEOMETRY}
+Tworzy strukturę geometryczną o zadanych parametrach (może to być np. polygon, kwadrat etc.)
+
+\subsection{Konkretne zadania wizualizujące}
+\subsubsection{Wizualizacja izoterm}
+Do wizualizacji izoterm wykorzystaliśmy zapytania GeoDjango pozwalające na wybranie Resortów w określonej odległości od zadanego Resortu początkowego.
+
+\begin{verbatim}
+points_data = Resorts.objects.filter(
+              position__dwithin=(self.position, distance_km),
+              measuresresorts__measures__min_temp__lt=temperature
+              ).unionagg().coords
+\end{verbatim}
+
+Następnie po przekonwertowaniu danych do odpowiedniego formatu korzystamy z nich przy generowaniu zapytania SQL.
+
+\begin{verbatim}
+SELECT SDO_UTIL.TO_WKTGEOMETRY(
+ SDO_GEOM.SDO_BUFFER(
+  SDO_GEOM.SDO_BUFFER(
+   SDO_GEOM.SDO_CONVEXHULL(
+    MDSYS.SDO_GEOMETRY(
+     2003,
+     4326,
+     NULL,
+     SDO_ELEM_INFO_ARRAY(1, 2003, 1),
+     SDO_ORDINATE_ARRAY(%s)),
+    50),
+   100, 50, 'unit=m'),
+  20, 50, 'unit=m')
+ ) FROM WORLD_WORLDBORDERS;" % points_str
+\end{verbatim}
+
+Zwracane dane to (w przypadku pomyślnego wyszukania odpowiednich danych resortów, POLYGON w formacie WKT (well-known text). Następnie polygon przetwarzany jest przez odpowiednie metody w PIL (python imaging library) i wraz z danymi GIS danego kraju tworzony jest obraz przedstawiający izotermę następującej postaci:
+
+\includegraphics[width=35em]{images/isotherm.png}
 
 \section{Crawler}
 Crawler jest napisany w języku Ruby i służy do pobierania danych ze strony
