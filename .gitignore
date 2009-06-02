@@ -10,3 +10,4 @@ data/data
 data/data/*
 data/pydata/*
 doc.pdf
+weather/public/*.png

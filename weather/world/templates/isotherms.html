@@ -1,0 +1,39 @@
+<html>
+  <head>
+    <title>Test</title>
+  </head>
+  <body>
+    <form action="/iso/" method="get">
+      <select name="resort" value="{{ p_resort }}">
+      {% for resort in resorts_list %}
+      <option {% ifequal p_resort resort.name %} selected {% endifequal %} name="resort" id="resort{{ forloop.counter}}" {% if p_resort %} value="{{ resort.name }}" {% endif %}>{{ resort.name }}</option>
+      {% endfor %}
+    </select>
+    <br />
+
+      Day: <input type="text" size="2" name="day" {% if day %} value="{{day}}" {% endif %} />
+      Month: <input type="text" size="2" name="month" {% if month %} value="{{month}}" {% endif %} />
+      Year: <input type="text" size="4" name="year" {% if year %} value="{{year}}" {% endif %} />
+      Ampli <input type="text" size="2" name="ampli" {% if ampli %} value="{{ampli}}" {% endif %} />
+      <input type="submit" value="Render" />
+    </form>
+
+    <br />
+    <br />
+    {% if path %}
+      <img src="/{{ path }}">
+    {% endif %}
+    {% if render_errors %}
+    <font color="red">{{ render_errors }}</font>
+    {% endif %}
+    <br />
+    {% if p_day %}
+    <a href="/iso/?resort={{p_resort}}&day={{p_day}}&month={{p_month}}&year={{p_year}}&ampli={{ampli}}">POPRZEDNI DZIEN</a>
+    {% endif %}
+                                            
+    {% if n_day %}
+    <a href="/iso/?resort={{p_resort}}&day={{n_day}}&month={{n_month}}&year={{n_year}}&ampli={{ampli}}">NASTEPNY DZIEN</a>
+    {% endif %}
+  </body>
+</html>
+

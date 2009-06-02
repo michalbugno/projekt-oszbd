@@ -17,6 +17,7 @@ urlpatterns = patterns('',
     # (r'^admin/(.*)', admin.site.root),
     (r'^$', 'weather.world.views.map'),
     (r'^resort/(.+)/', 'weather.world.views.resort'),
+    (r'^iso/$', 'weather.world.views.isotherms'),
     (r'^admin/(.*)', admin.site.root),
     (r'^(?P<path>.*)$', 'django.views.static.serve', {'document_root': os.path.join(os.path.dirname(__file__), 'public').replace('\\','/')}),
 )

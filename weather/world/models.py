@@ -39,18 +39,42 @@ class Resorts(models.Model):
         return MeasuresResorts.objects.filter(resort__name=self.name)
 
 
-    def draw_isoterms(self, date, temps, buffer_width, distance, filename):
+    def draw_isoterms(self, date, amplitude, buffer_width, distance, filename):
         a = WorldBorders.objects.filter(name='Austria')[0]
         d = Drawer(a.mpoly.coords[0][0])
-        for temp in temps:
-          d.draw_poly(self.similar_coords(date, temp, buffer_width, distance))
+
+        min_t = self.find_min_temp(date, distance)
+
+        temps = (min_t + 3*amplitude, min_t + 2*amplitude, min_t + amplitude)
+
+        print temps
+
+        out_fills = (('red', (255, 0, 0, 164)), ('orange', (255, 135, 0, 164)), ('blue', (0, 0, 255, 165)))
+
+        for i in range(len(temps)):
+          d.draw_poly(self.similar_coords(date, temps[i], buffer_width, distance), out_fills[i][0], out_fills[i][1])
+          d.draw_legend(i, temps[i], out_fills[i][1])
         d.save(filename)
+    
+    def find_min_temp(self, date, distance):
+        distance_km = Distance(km=distance)
+
+        resorts_within = Resorts.objects.filter(position__dwithin=(self.position, distance_km), measuresresorts__measures__taken_at=date)
+        
+        min_t = Measures.objects.filter(measure_resort__resort=self, taken_at=date).all()[0].min_temp
+        
+        for resort in resorts_within:
+            ms = Measures.objects.filter(measure_resort__resort=resort, taken_at=date).all()
+            for m in ms:
+                if m.min_temp < min:
+                    min_t = m.min_temp
+
+        return min_t
 
 
     def similar_coords(self, date, temperature, buffer_width, distance):
         distance_km = Distance(km=distance)
-        date = date.date()
-        points = None
+
         points_data = Resorts.objects.filter(position__dwithin=(self.position, distance_km), measuresresorts__measures__min_temp__lt=temperature, measuresresorts__measures__taken_at=date).unionagg()
         #points_data = Resorts.objects.filter(position__dwithin=(self.position, distance_km), measuresresorts__measures__min_temp__lt=temperature).unionagg()
 
@@ -66,7 +90,10 @@ class Resorts(models.Model):
 
         poly_coords = []
         for coords in str(output)[8:].replace("(", "").replace(")", "").split(", "):
-            poly_coords.append(map(float, coords.split(" ")))
+            try:
+                poly_coords.append(map(float, coords.split(" ")))
+            except ValueError:
+                print 'krap'
         return poly_coords
 
 

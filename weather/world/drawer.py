@@ -1,4 +1,4 @@
-import Image, ImageDraw
+import Image, ImageDraw, ImageFont
 
 class Drawer:
 
@@ -11,8 +11,12 @@ class Drawer:
     self.draw.polygon(self.coord_mapper(coords), outline='black', fill='white')
 
 
-  def draw_poly(self, coords):
-    self.draw.polygon(self.coord_mapper(coords), outline='red', fill='orange')
+  def draw_poly(self, coords, out, fil):
+    self.draw.polygon(self.coord_mapper(coords), outline=out, fill=fil)
+
+  def draw_legend(self, number, temperature, fil):
+    self.draw.rectangle((50, 400+number*15)+(60, 410+number*15), fill=fil)
+    self.draw.text((70, 400+number*15), "temp less than "+str(temperature)+" deg. C", font=ImageFont.load_default(), fill='black')
 
 
   def draw_points(self, coords, radius, fill='orange'):

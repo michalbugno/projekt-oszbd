@@ -2,6 +2,11 @@
 from django.http import HttpResponse
 from django.shortcuts import render_to_response
 from world.models import Resorts
+import os
+
+import datetime
+
+resorts_list = Resorts.objects.all()
 
 def map(request):
   resorts = Resorts.objects.all()
@@ -17,3 +22,50 @@ def resort(request, resort_pk):
     within = int(request.GET.get('within', 20))
     near_resorts = resort.within_distance(within)
     return render_to_response('resort.html', {'resort' : resort, 'near_resorts' : near_resorts, 'within' : within})
+
+def isotherms(request):
+    global resorts_list
+
+    if request.GET:
+        p_resort = Resorts.objects.get(pk=request.GET['resort'])
+
+        day = int(request.GET['day'])
+        month = int(request.GET['month'])
+        year =int(request.GET['year'])
+        ampli =int(request.GET['ampli'])
+
+        chosen_date = datetime.date(year, month, day)
+
+        prev_date = datetime.date.fromordinal(chosen_date.toordinal()-1)
+        next_date = datetime.date.fromordinal(chosen_date.toordinal()+1)
+
+        shortpath = 'iso_%s_%02d-%02d-%02d_%02d.png' % (p_resort.name, year, month, day, ampli)
+        path = 'public/'+shortpath
+
+        query_dict = {  'path' : shortpath,
+                'p_resort' : p_resort.name,
+                'day' : str(day),
+                'month' : str(month),
+                'year'  : str(year),
+                'ampli' : str(ampli),
+                'n_day' : str(next_date.day),
+                'n_month' : str(next_date.month),
+                'n_year'  : str(next_date.year),
+                'p_day' : str(prev_date.day),
+                'p_month' : str(prev_date.month),
+                'p_year'  : str(prev_date.year),
+                'resorts_list' : resorts_list,
+        }
+    
+        if not os.path.exists(path):
+            p_resort.draw_isoterms(chosen_date, ampli, 5, 60, path)
+
+        return render_to_response('isotherms.html', query_dict)
+
+    else:
+        render_errors = 'no request'
+        return render_to_response('isotherms.html', {'render_errors' : render_errors, 'resorts_list' : resorts_list})
+
+
+
+
