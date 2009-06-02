@@ -16,7 +16,7 @@ class Drawer:
 
   def draw_legend(self, number, temperature, fil):
     self.draw.rectangle((50, 400+number*15)+(60, 410+number*15), fill=fil)
-    self.draw.text((70, 400+number*15), "temp less than "+str(temperature)+" deg. C", font=ImageFont.load_default(), fill='black')
+    self.draw.text((70, 400+number*15), "temp less than %.02f deg. C" % temperature, font=ImageFont.load_default(), fill='black')
 
 
   def draw_points(self, coords, radius, fill='orange'):

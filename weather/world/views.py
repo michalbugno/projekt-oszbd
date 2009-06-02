@@ -32,14 +32,13 @@ def isotherms(request):
         day = int(request.GET['day'])
         month = int(request.GET['month'])
         year =int(request.GET['year'])
-        ampli =int(request.GET['ampli'])
 
         chosen_date = datetime.date(year, month, day)
 
         prev_date = datetime.date.fromordinal(chosen_date.toordinal()-1)
         next_date = datetime.date.fromordinal(chosen_date.toordinal()+1)
 
-        shortpath = 'iso_%s_%02d-%02d-%02d_%02d.png' % (p_resort.name, year, month, day, ampli)
+        shortpath = 'iso_%s_%02d-%02d-%02d.png' % (p_resort.name, year, month, day)
         path = 'public/'+shortpath
 
         query_dict = {  'path' : shortpath,
@@ -47,7 +46,6 @@ def isotherms(request):
                 'day' : str(day),
                 'month' : str(month),
                 'year'  : str(year),
-                'ampli' : str(ampli),
                 'n_day' : str(next_date.day),
                 'n_month' : str(next_date.month),
                 'n_year'  : str(next_date.year),
@@ -58,7 +56,7 @@ def isotherms(request):
         }
     
         if not os.path.exists(path):
-            p_resort.draw_isoterms(chosen_date, ampli, 5, 60, path)
+            p_resort.draw_isoterms(chosen_date, 5, 60, path)
 
         return render_to_response('isotherms.html', query_dict)
 

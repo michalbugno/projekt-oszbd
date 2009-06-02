@@ -39,11 +39,13 @@ class Resorts(models.Model):
         return MeasuresResorts.objects.filter(resort__name=self.name)
 
 
-    def draw_isoterms(self, date, amplitude, buffer_width, distance, filename):
+    def draw_isoterms(self, date, buffer_width, distance, filename):
         a = WorldBorders.objects.filter(name='Austria')[0]
         d = Drawer(a.mpoly.coords[0][0])
 
-        min_t = self.find_min_temp(date, distance)
+        max_t, min_t = self.find_extreme_temps(date, distance)
+
+        amplitude = (max_t-min_t)/3.0
 
         temps = (min_t + 3*amplitude, min_t + 2*amplitude, min_t + amplitude)
 
@@ -56,20 +58,23 @@ class Resorts(models.Model):
           d.draw_legend(i, temps[i], out_fills[i][1])
         d.save(filename)
     
-    def find_min_temp(self, date, distance):
+    def find_extreme_temps(self, date, distance):
         distance_km = Distance(km=distance)
 
         resorts_within = Resorts.objects.filter(position__dwithin=(self.position, distance_km), measuresresorts__measures__taken_at=date)
         
         min_t = Measures.objects.filter(measure_resort__resort=self, taken_at=date).all()[0].min_temp
+        max_t = min_t
         
         for resort in resorts_within:
             ms = Measures.objects.filter(measure_resort__resort=resort, taken_at=date).all()
             for m in ms:
-                if m.min_temp < min:
+                if m.min_temp < min_t:
                     min_t = m.min_temp
+                if m.min_temp > max_t:
+                    max_t = m.min_temp
 
-        return min_t
+        return (max_t, min_t)
 
 
     def similar_coords(self, date, temperature, buffer_width, distance):
