@@ -38,10 +38,28 @@ class Resorts(models.Model):
     def measure_resorts(self):
         return MeasuresResorts.objects.filter(resort__name=self.name)
 
+    def find_far(self, date):
+        distance1 = Distance(km=130)
+        distance2 = Distance(km=230)
 
-    def draw_isoterms(self, date, buffer_width, distance, filename):
+        r1 = Resorts.objects.exclude(position__dwithin=(self.position, distance1), measuresresorts__measures__taken_at=date)
+        
+        if r1:
+            resort1 = r1[0]
+
+        r2 = Resorts.objects.exclude(position__dwithin=(self.position, distance2), measuresresorts__measures__taken_at=date)
+        
+        if r2:
+            resort2 = r2.reverse()[0]
+
+        return resort1, resort2
+
+    def draw_isoterms(self, date, buffer_width, distance, filename, new_im=True):
         a = WorldBorders.objects.filter(name='Austria')[0]
-        d = Drawer(a.mpoly.coords[0][0])
+        if new_im:
+            d = Drawer(a.mpoly.coords[0][0])
+        else:
+            d = Drawer(a.mpoly.coords[0][0], fname=filename)
 
         max_t, min_t = self.find_extreme_temps(date, distance)
 
@@ -54,8 +72,8 @@ class Resorts(models.Model):
         out_fills = (('red', (255, 0, 0, 164)), ('orange', (255, 135, 0, 164)), ('blue', (0, 0, 255, 165)))
 
         for i in range(len(temps)):
-          d.draw_poly(self.similar_coords(date, temps[i], buffer_width, distance), out_fills[i][0], out_fills[i][1])
-          d.draw_legend(i, temps[i], out_fills[i][1])
+            d.draw_poly(self.similar_coords(date, temps[i], buffer_width, distance), out_fills[i][0], out_fills[i][1])
+            d.draw_legend(i, temps[i], out_fills[i][1])
         d.save(filename)
     
     def find_extreme_temps(self, date, distance):

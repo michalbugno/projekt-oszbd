@@ -3,12 +3,17 @@ import Image, ImageDraw, ImageFont
 class Drawer:
 
 
-  def __init__(self, coords):
+  def __init__(self, coords, fname=None):
     # self.coords = wkt
-    self.image = Image.new("RGBA", (800, 600))
+    if fname:
+        self.image = Image.open(fname)
+    else:
+        self.image = Image.new("RGBA", (800, 600))
+
     self.draw = ImageDraw.Draw(self.image)
     self.minx, self.miny, self.maxx, self.maxy = self.analyze_coords(coords)
-    self.draw.polygon(self.coord_mapper(coords), outline='black', fill='white')
+    if not fname:
+       self.draw.polygon(self.coord_mapper(coords), outline='black', fill='white')
 
 
   def draw_poly(self, coords, out, fil):

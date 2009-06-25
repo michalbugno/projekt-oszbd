@@ -56,7 +56,10 @@ def isotherms(request):
         }
     
         if not os.path.exists(path):
-            p_resort.draw_isoterms(chosen_date, 5, 60, path)
+            second, third = p_resort.find_far(chosen_date)
+            p_resort.draw_isoterms(chosen_date, 8, 60, path)
+            second.draw_isoterms(chosen_date, 8, 100, path, new_im=False)
+            third.draw_isoterms(chosen_date, 8, 100, path, new_im=False)
 
         return render_to_response('isotherms.html', query_dict)
 

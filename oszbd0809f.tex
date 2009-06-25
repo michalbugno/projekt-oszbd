@@ -277,21 +277,26 @@ Metoda \texttt{load.load\_fixtures()} czyści bazę i tworzy wszystkie fikstury 
 i \texttt{load.load\_resorts()} działają na poszczególnych tabelach.
 
 \subsection{Wizualizacja danych}
-W celu wizualizacji danych ściśle powiązanych z GIS wykorzystaliśmy dostępne w Oracle Spatial metody do pracy na wcześniej utworzonych oraz do tworzenia struktur GIS. Poza tym skorzystaliśmy z modułu PIL (Python Imaging Library) do tworzenia obrazów z otrzymanych danych typu WKT (Well-known text)
+W celu wizualizacji danych ściśle powiązanych z GIS wykorzystaliśmy dostępne w Oracle Spatial metody do pracy na wcześniej utworzonych oraz do tworzenia struktur GIS. Poza tym skorzystaliśmy z modułu PIL (Python Imaging Library) do tworzenia obrazów z otrzymanych danych typu WKT (Well-known text).
 
 \subsection{Metody Oracle Spatial}
-\subsubsection{SDO\_UTIL.TO\_WKTGEOMETRY}
-Konwertuje zadany obiekt typu SDO\_GEOMETRY do typu WKT - well-known text.
-\subsubsection{SDO\_GEOM.SDO\_BUFFER}
-Tworzy wokół obiektu strefę buforową o zadanych parametrach (odległość oraz tolerancja)
-\subsubsection{SDO\_GEOM.SDO\_CONVEXHULL}
-Zwraca polygon wypukły oparty na elementach zadanego obiektu typu SDO\_GEOMETRY
-\subsubsection{MDSYS.SDO\_GEOMETRY}
-Tworzy strukturę geometryczną o zadanych parametrach (może to być np. polygon, kwadrat etc.)
 
+\subsubsection{SDO\_UTIL.TO\_WKTGEOMETRY}
+Konwertuje zadany obiekt typu SDO\_GEOMETRY do typu WKT - well-known text. Argumentem jest obiekt typu SDOGEOMETRY. 
+Well known text (WKT) pozwala nam na sprawna manipulacje otrzymanym polygonem chociazby z poziomu biblioteki wizualizujacej pythona (PIL).
+\subsubsection{SDO\_GEOM.SDO\_BUFFER}
+Tworzy wokół obiektu strefę buforową o zadanych parametrach (odległość oraz tolerancja). Pierwszym parametrem jest odległość czyli rozmiar zadanego buforu. Bufor może mieć wartość ujemną, tak aby utworzony obiekt w wiekszej skali \'obcinany byl\' z niepotrzebnych kawałków. Drugim parametrem jest tolerancja. Tolerancja służyć ma do korygowania niedoskonałości zarówno w posiadanych danych, jak i rowniez utworzonych zapytań z nim związanych. Stosujemy dwa bufory, tak aby jeden z nich korygował niedoskonałości wcześniej zastosowanego.
+\subsubsection{SDO\_GEOM.SDO\_CONVEXHULL}
+Argumentem jest obiekt SDO\_GEOMETRY, metoda zwraca obiekt SDO\_GEOMETRY będący wypukłą otoczką (convex hull) obiektu. Parametrem drugim jest tolerancja (opisana punkt wyżej).
+\subsubsection{MDSYS.SDO\_GEOMETRY}
+Tworzy strukturę geometryczną o zadanych parametrach. Dokładny opis metody jest mocno zawiły, przyjmuje oa jako argumenty punkty mające stanowić polygon jak i również typ polygonu do utworzenia (prostokat, romb, wielobok nieregularny)
+\subsubsection{SDO\_GEOM.SDO\_ELEM\_INFO\_ARRAY}
+Informuje o formacie danych podawanych przy tworzeniu polygonu (pierwszym argumentem jest numer poczatkowy z mapy punktow, drugi argument definiuje typ podawanych elementow (np. relacje jak w wypuklym polygonie)).
+\subsubsection{SDO\_ORDINATE\_ARRAY}
+Formatuje zadane punkty (oddzielone kolejno przecinkami) do formatu akceptowanego przez powyższe funkcje.
 \subsection{Konkretne zadania wizualizujące}
 \subsubsection{Wizualizacja izoterm}
-Do wizualizacji izoterm wykorzystaliśmy zapytania GeoDjango pozwalające na wybranie Resortów w określonej odległości od zadanego Resortu początkowego.
+Do wizualizacji izoterm wykorzystaliśmy zapytania GeoDjango pozwalające na wybranie Resortów w określonej odległości od zadanego Resortu początkowego. Znajduje sie ono pod urlem iso.
 
 \begin{verbatim}
 points_data = Resorts.objects.filter(
@@ -315,13 +320,27 @@ SELECT SDO_UTIL.TO_WKTGEOMETRY(
      SDO_ORDINATE_ARRAY(%s)),
     50),
    100, 50, 'unit=m'),
-  20, 50, 'unit=m')
+  -20, 50, 'unit=m')
  ) FROM WORLD_WORLDBORDERS;" % points_str
 \end{verbatim}
+
+Zaczynając od wewnątrz, metoda SDO\_GEOMETRY o parametrach 2003 (polygon wypukly), 4326 (system koordynacji, do dostosowywania polygonu do reszty danych GIS, pierwszy bufor o tolerancji 50m oraz dystansie 100m wokol punktow, drugi bufor ucina (buforuje 'do wewnatrz') o 20m.  Całośc zamieniana jest do formatu well-known text.
 
 Zwracane dane to (w przypadku pomyślnego wyszukania odpowiednich danych resortów, POLYGON w formacie WKT (well-known text). Następnie polygon przetwarzany jest przez odpowiednie metody w PIL (python imaging library) i wraz z danymi GIS danego kraju tworzony jest obraz przedstawiający izotermę następującej postaci:
 
 \includegraphics[width=35em]{images/isotherm.png}
+
+\section{Wyniki wizualizacji isoterm.}
+
+W celu dopracowania systemu wizualizacji zaczęliśmy grupować zestawy ośrodków w zadanej odległości od głównego o zbliżonych pomiarach temperatur. Wprowadziliśmy różną kolorystykę w celu usprawnienia odczytu wykresów, jak również wprowadziliśmy opis legendy (która również generowana jest optymalnie do dostępnych wskazań temperatury w zadanym dniu. Mimo nie do końca kompletnych i sprawnych danych udało nam się osiągnąć zadowalające wyniki:
+
+\includegraphics[width=35em]{images/iso_Lachtal_2008-03-02.png}
+
+\includegraphics[width=35em]{images/iso_Pitztal_2008-03-02.png}
+
+\includegraphics[width=35em]{images/iso_Kitzbuhel_2008-03-02-1.png}
+
+\newpage
 
 \section{Crawler}
 Crawler jest napisany w języku Ruby i służy do pobierania danych ze strony
@@ -344,7 +363,7 @@ Aby je odczytać wystarczy
 data = Marshal.load(File.read(filename))
 \end{verbatim}
 
-\section{Plan prac}
+\section{Raport prac}
 Plan jest ułożony malejąco względem priorytetów.
 \subsection{Crawler}
 \begin{itemize}
@@ -358,39 +377,27 @@ Plan jest ułożony malejąco względem priorytetów.
   \item zmapowanie tabel w modelach Django
   \item ustalenie formatu danych oraz ich konwersja do formatu odpowiadającego modelowi w bazie danych
   \item zaimportowanie danych do bazy danych
-  \item utworzenie części aplikacji odpowiedzialnej za aktualizację zbieranych danych
 \end{itemize}
 
 \subsection{Analiza danych}
 \begin{itemize}
   \item umożliwienie wyświetlania prognozowanych danych dla resortów, dla których istnieją pobrane dane
         (podpierając się GIS)
-  \item implementacja systemu 'przewidującego' pogodę na podstawie poprzednich danych (na życzenie lub w
-        sytuacji gdy dane prognozowane nie są dostępne)
-  \item porównywanie danych z różnych ośrodków oraz przedstawienie raportów
-  \item dobieranie najoptymalniejszego resortu spośród dostępnych raportów na bazie preferencji użytkownika
+  \item listowanie resortów w zadanej odległości
   \item możliwość zacieśnienia przeszukiwanych/porównywanych resortów tylko i wyłącznie do określonego regionu
-  \item dobór ośrodka na podstawie aktualnej pozycji użytkownika (np. odległość od domu/odległość od ośrodka
-        w którym użytkownik znajduje się aktualnie, a np. nie jest zadowolony)
 \end{itemize}
 
 \subsection{Wizualizacja danych}
 \begin{itemize}
-  \item prezentowanie aktualnych danych w postaci różnego rodzaju wykresów (np. stosunek świeżego śniegu
-        do grubości pokrywy śnieżnej, prezentacja temperatur na różnych wysokościach)
   \item generowanie wykresów na podstawie danych historycznych (np. temperatury z ostatniego tygodnia)
-  \item wizualizacja porównawcza różnych ośrodków (prezentacja różnic w temperaturze, wietrze i śniegu dla
-        dwóch lub więcej ośrodków)
-  \item przedyskutowanie dalszych możliwości wizualizacji danych
+  \item wizualizacja izoterm na mapie Austrii, bazujacych na dostępnych danych, o różnych poziomach przedziałów temperatur.
+  \item wizualizacja izobar (j.w.)
   \item wizualizacja danych prognozowanych za pomocą Google Maps API
 \end{itemize}
 
 \subsection{Dodatkowe}
 \begin{itemize}
-  \item wyszukanie serwisów prognozujących pogodę dla konkretnych regionów w Austrii (dostosowanie crawlera)
   \item implementacja wyszukiwania ośrodków
-  \item utworzenie możliwości deklarowania preferencji przez użytkownika oraz ich zapisywanie
-  \item możliwośc wyszukiwania bazującego na preferencjach użytkownika, poszerzenie systemu wyszukiwania
   \item próba wykorzystania Google Maps API do prezentowania dokładniejszej odległości danego ośrodka od
         użytkownika (na podstawie jego aktualnej pozycji np. w preferencjach)
 \end{itemize}
@@ -404,6 +411,7 @@ Plan jest ułożony malejąco względem priorytetów.
   \item[System kontroli wersji Git] \url{http://git-scm.com/}
   \item[Python] \url{http://www.python.org/}
   \item[Ruby] \url{http://www.ruby-lang.org/}
+  \item[Oracle Spatial] \url{http://download.oracle.com/docs/cd/B10501_01/appdev.920/a96630/toc.htm}
 \end{description}
 
 \end{document}
