@@ -14,7 +14,7 @@
 \hypersetup{
   linkbordercolor={1 1 1},
   urlbordercolor={1 1 1},
-  colorlinks=true
+  colorlinks=false
 }
 
 \pagestyle{fancy}
@@ -363,12 +363,14 @@ Aby je odczytać wystarczy
 data = Marshal.load(File.read(filename))
 \end{verbatim}
 
-\section{Raport prac}
-Plan jest ułożony malejąco względem priorytetów.
+\section{Raport z prac}
 \subsection{Crawler}
 \begin{itemize}
-  \item część \emph{Transform} przerabiające surowe dane na potrzeby aplikacji
-  \item część \emph{Load} tworząca SQL-e i wykonująca je w kontekście bazy
+  \item przygotowanie skryptu mającego na celu pobieranie danych pogodowych z internetu, wybór
+  najważniejszych danych oraz sposobu ich uzyskania
+  \item implementacja części \emph{Extract} wydobywającej dane ze stron internetowych
+  \item implementacja części \emph{Transform} przerabiającej surowe dane na potrzeby aplikacji
+  \item implementacja części \emph{Load} tworzącej SQL-e i wykonująca je w kontekście bazy.
 \end{itemize}
 
 \subsection{Import danych}
@@ -384,15 +386,17 @@ Plan jest ułożony malejąco względem priorytetów.
   \item umożliwienie wyświetlania prognozowanych danych dla resortów, dla których istnieją pobrane dane
         (podpierając się GIS)
   \item listowanie resortów w zadanej odległości
-  \item możliwość zacieśnienia przeszukiwanych/porównywanych resortów tylko i wyłącznie do określonego regionu
+  \item możliwość zacieśnienia przeszukiwanych/porównywanych resortów tylko i wyłącznie do określonego regionu (bazując na zadanej odległości)
+  \item możliwość wydobywania danych GIS reprezentujących obszary spełniające konkretnie zadane parametry (np. izotermy)
 \end{itemize}
 
 \subsection{Wizualizacja danych}
 \begin{itemize}
+  \item wizualizacja ośrodków za pomocą Google Maps API
+  \item wizualizacja ośrodków znajdujących się w konkrentych odległościach od zadanych z pomocą Google Maps API
   \item generowanie wykresów na podstawie danych historycznych (np. temperatury z ostatniego tygodnia)
   \item wizualizacja izoterm na mapie Austrii, bazujacych na dostępnych danych, o różnych poziomach przedziałów temperatur.
-  \item wizualizacja izobar (j.w.)
-  \item wizualizacja danych prognozowanych za pomocą Google Maps API
+  \item implementacja cache'owania wygenerowanych wcześniej wizualizacji w celu oszczędności czasu.
 \end{itemize}
 
 \subsection{Dodatkowe}
@@ -400,6 +404,8 @@ Plan jest ułożony malejąco względem priorytetów.
   \item implementacja wyszukiwania ośrodków
   \item próba wykorzystania Google Maps API do prezentowania dokładniejszej odległości danego ośrodka od
         użytkownika (na podstawie jego aktualnej pozycji np. w preferencjach)
+  \item implementacja systemu pobierającego preferencje wyszukiwania użytkownika, preferowanych danych a następnie
+  \item wizualizacji izoterm o zadanych parametrach w przeglądarce internetowej.
 \end{itemize}
 
 \section{Linki}
